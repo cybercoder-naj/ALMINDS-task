@@ -10,9 +10,13 @@ import com.nishant.customview.views.PaymentCard
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val paymentCard = PaymentCard(this).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400)
+        setContentView(R.layout.activity_main)
+
+        findViewById<PaymentCard>(R.id.card1).apply {
+            date = "22nd Sep"
         }
-        setContentView(paymentCard)
+        findViewById<PaymentCard>(R.id.card2).apply {
+            date = "4:00pm"
+        }
     }
 }
