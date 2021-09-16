@@ -2,21 +2,29 @@ package com.nishant.customview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.Button
-import androidx.core.view.isVisible
-import com.nishant.customview.views.PaymentCard
+import com.nishant.customview.views.CreditTypeView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<PaymentCard>(R.id.card1).apply {
+        findViewById<CreditTypeView>(R.id.card1).apply {
             date = "22nd Sep"
+            //imageResource = R.drawable.android
+            image = "https://cybercoder-naj.github.io/assets/nishant.png"
+            name = "Nishant"
+            method = "UPI"
+            transactionType = "Cr"
+            amount = 532.2894f
         }
-        findViewById<PaymentCard>(R.id.card2).apply {
+        findViewById<CreditTypeView>(R.id.card2).apply {
             date = "4:00pm"
+            imageResource = R.drawable.android
+            name = "Komolika"
+            method = "NET"
+            transactionType = "Cr"
+            amount = 10000.034f
         }
     }
 }
