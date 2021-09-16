@@ -13,7 +13,9 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.nishant.customview.R
+import com.nishant.customview.getCircledBitmap
 import kotlin.math.floor
+import kotlin.math.min
 import kotlin.math.round
 
 private const val TAG = "CreditTypeView"
@@ -31,6 +33,7 @@ class CreditTypeView @JvmOverloads constructor(
     private var profileX = 0f
     private var profileY = 0f
     private var profileR = 0f
+    private val profileRect = RectF()
 
     private var nameX = 0f
     private var nameY = 0f
@@ -183,6 +186,7 @@ class CreditTypeView @JvmOverloads constructor(
         set(value) {
             field = value
             part1Paint.color = field
+            transactionTypePaint.color = field
             postInvalidate()
         }
     var shadowRadius: Float
@@ -200,14 +204,44 @@ class CreditTypeView @JvmOverloads constructor(
         // TODO configure
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val desiredWidth = 100
+        val desiredHeight = 450
+
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+
+        val width = when (widthMode) {
+            MeasureSpec.EXACTLY -> widthSize
+            MeasureSpec.AT_MOST -> min(desiredWidth, widthSize)
+            else -> desiredWidth
+        }
+
+        val height = when (heightMode) {
+            MeasureSpec.EXACTLY -> heightSize
+            MeasureSpec.AT_MOST -> min(desiredHeight, heightSize)
+            else -> desiredHeight
+        }
+
+        setMeasuredDimension(width, height)
+    }
+
     override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
         if (canvas == null)
             return
 
         profileX = (width - offset) * .875f
         profileY = (height - offset) * .275f
         profileR = (height - offset) / 5.5f
+
+        profileRect.apply {
+            left = profileX - profileR + 12f
+            top = profileY - profileR + 12f
+            right = profileX + profileR - 12f
+            bottom = profileY + profileR - 12f
+        }
 
         shadowPaint.apply {
             color = Color.parseColor("#DDDDDD")
@@ -317,27 +351,9 @@ class CreditTypeView @JvmOverloads constructor(
         canvas.drawBitmap(
             bitmap.getCircledBitmap(),
             null,
-            RectF(
-                profileX - profileR + 12f,
-                profileY - profileR + 12f,
-                profileX + profileR - 12f,
-                profileY + profileR - 12f
-            ),
+            profileRect,
             null
         )
-    }
-
-    private fun Bitmap.getCircledBitmap(): Bitmap {
-        val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(output)
-        val paint = Paint()
-        val rect = Rect(0, 0, this.width, this.height)
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        canvas.drawCircle(this.width / 2f, this.height / 2f, this.width / 2f, paint)
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(this, rect, rect, paint)
-        return output
     }
 
     private fun writeDate(text: String, canvas: Canvas) {
