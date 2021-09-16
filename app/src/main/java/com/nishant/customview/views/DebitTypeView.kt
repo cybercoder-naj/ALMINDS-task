@@ -5,7 +5,6 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -16,9 +15,9 @@ import com.nishant.customview.R
 import kotlin.math.floor
 import kotlin.math.round
 
-private const val TAG = "CreditTypeView"
+private const val TAG = "DebitTypeView"
 
-class CreditTypeView @JvmOverloads constructor(
+class DebitTypeView @JvmOverloads constructor(
     ctx: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -43,11 +42,8 @@ class CreditTypeView @JvmOverloads constructor(
 
     private val methodBounds = Rect()
 
-    private var transactionX = 0f
-    private var transactionY = 0f
-    private var transactionH = 0f
-    private var transactionW = 0f
-    private val transactionBounds = Rect()
+    private var fractionalX = 0f
+    private var fractionalY = 0f
 
     private val fractionalBounds = Rect()
     private val integralBounds = Rect()
@@ -55,7 +51,7 @@ class CreditTypeView @JvmOverloads constructor(
 
     private val part1Paint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.parseColor("#37D8CF")
+        color = Color.parseColor("#EC7696")
     }
     private val diagonalArrow =
         ResourcesCompat.getDrawable(resources, R.drawable.ic_diagonal_arrow, null)
@@ -64,15 +60,9 @@ class CreditTypeView @JvmOverloads constructor(
     private val shadowPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
-    private val curvePath = Path().apply {
-        moveTo(offsetSmall, offsetSmall)
-    }
-    private val shadowPath = Path().apply {
-        moveTo(0f, 0f)
-    }
-    private val part1Path = Path().apply {
-        moveTo(offsetSmall, offsetSmall)
-    }
+    private val curvePath = Path()
+    private val shadowPath = Path()
+    private val part1Path = Path()
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
@@ -93,7 +83,7 @@ class CreditTypeView @JvmOverloads constructor(
     }
     private val transactionTypePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        color = Color.parseColor("#37D8CF")
+        color = Color.parseColor("#EC7696")
         textSize = 56f
         strokeWidth = 2f
     }
@@ -179,7 +169,7 @@ class CreditTypeView @JvmOverloads constructor(
             field = value * 2
             postInvalidate()
         }
-    var accentColor: Int = Color.parseColor("#37D8CF")
+    var accentColor: Int = Color.parseColor("#EC7696")
         set(value) {
             field = value
             part1Paint.color = field
@@ -205,9 +195,13 @@ class CreditTypeView @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        profileX = (width - offset) * .875f
+        profileX = (width - offset) * .175f
         profileY = (height - offset) * .275f
         profileR = (height - offset) / 5.5f
+
+        shadowPath.moveTo(width.toFloat(), 0f)
+        curvePath.moveTo(width - offsetSmall, offsetSmall)
+        part1Path.moveTo(width - offsetSmall, offsetSmall)
 
         shadowPaint.apply {
             color = Color.parseColor("#DDDDDD")
@@ -217,7 +211,13 @@ class CreditTypeView @JvmOverloads constructor(
         drawBackground(canvas)
         drawPart1(canvas)
         diagonalArrow?.toBitmap()?.let {
-            canvas.drawBitmap(it, width / 36f, height / 15.3f, null)
+            canvas.apply {
+                rotate(180f, width * .895f, height / 15.3f)
+                translate(width * -.075f, height * -.175f)
+                drawBitmap(it, width * .895f, height / 15.3f, null)
+                translate(width * .075f, height * .175f)
+                rotate(-180f, width * .895f, height / 15.3f)
+            }
         }
 
         date?.let { writeDate(it, canvas) }
@@ -226,15 +226,35 @@ class CreditTypeView @JvmOverloads constructor(
         if (!drawDot(canvas))
             return
         method?.let { writeMethod(it, canvas) }
-        transactionType?.let { writeTransactionType(it, canvas) }
         if (amount != -1f)
             writeAmount(amount, canvas)
+        transactionType?.let {
+            canvas.drawText(
+                it,
+                fractionalX + fractionalBounds.width() + 16f,
+                fractionalY,
+                transactionTypePaint
+            )
+        }
         rightArrow?.toBitmap()?.let {
-            canvas.drawBitmap(it, width * .825f, transactionY - it.height, null)
+            canvas.drawBitmap(it, width * .8f, fractionalY - it.height, null)
         }
     }
 
     private fun writeAmount(amount: Float, canvas: Canvas) {
+        val rupee = "\u20B9"
+        amountFractionalPaint.getTextBounds(rupee, 0, 1, rupeeBounds)
+
+        val rupeeX = nameX
+        val rupeeY = (profileY + profileR + height) / 2f
+
+        canvas.drawText(
+            rupee,
+            rupeeX,
+            rupeeY,
+            amountFractionalPaint
+        )
+
         var fractional = ".${((amount - floor(amount)) * 100f).toInt()}"
         if (fractional.length == 2)
             fractional = ".0${fractional.last()}"
@@ -250,41 +270,21 @@ class CreditTypeView @JvmOverloads constructor(
             }
         }
 
-        amountFractionalPaint.getTextBounds(fractional, 0, fractional.length, fractionalBounds)
-        val fractionalX = transactionX - fractionalBounds.width() - 16f
-        val fractionalY = transactionY
-        canvas.drawText(fractional, fractionalX, fractionalY, amountFractionalPaint)
-
         amountIntegralPaint.getTextBounds(integral, 0, integral.length, integralBounds)
-        val amountX = fractionalX - integralBounds.width() - 10f
-        canvas.drawText(integral, amountX, fractionalY, amountIntegralPaint)
+        val amountX = rupeeX + rupeeBounds.width() + 12f
+        canvas.drawText(integral, amountX, rupeeY, amountIntegralPaint)
 
-        val rupee = "\u20B9"
-        amountFractionalPaint.getTextBounds(rupee, 0, 1, rupeeBounds)
-        canvas.drawText(
-            rupee,
-            amountX - rupeeBounds.width() - 12f,
-            fractionalY,
-            amountFractionalPaint
-        )
-    }
-
-    private fun writeTransactionType(text: String, canvas: Canvas) {
-        transactionTypePaint.getTextBounds(text, 0, text.length, transactionBounds)
-
-        transactionW = transactionBounds.width().toFloat()
-        transactionH = transactionBounds.height().toFloat()
-        transactionX = nameX + nameW - transactionW
-        transactionY = (profileY + profileR + height) / 2f
-
-        canvas.drawText(text, transactionX, transactionY, transactionTypePaint)
+        amountFractionalPaint.getTextBounds(fractional, 0, fractional.length, fractionalBounds)
+        fractionalX = amountX + integralBounds.width() + 10f
+        fractionalY = rupeeY
+        canvas.drawText(fractional, fractionalX, fractionalY, amountFractionalPaint)
     }
 
     private fun writeMethod(method: String, canvas: Canvas) {
         methodTextPaint.getTextBounds(method, 0, method.length, methodBounds)
 
-        val methodX = dotX - methodBounds.width() - width / 28f
-        val methodY = nameY - methodBounds.height() / 8f
+        val methodX = dotX + width / 32f
+        val methodY = nameY - methodBounds.height() / 10f
 
         canvas.drawText(method, methodX, methodY, methodTextPaint)
     }
@@ -293,7 +293,7 @@ class CreditTypeView @JvmOverloads constructor(
         if (name == null || method == null)
             return false
 
-        dotX = nameX - width / 32f
+        dotX = nameX + nameW + width / 32f
         dotY = nameY - nameH / 2.75f
         canvas.drawCircle(dotX, dotY, 10f, dotPaint)
         return true
@@ -305,7 +305,7 @@ class CreditTypeView @JvmOverloads constructor(
         nameW = nameBounds.width().toFloat()
         nameH = nameBounds.height().toFloat()
 
-        nameX = profileX - profileR - width / 16f - nameW
+        nameX = profileX + profileR + width / 20f
         nameY = profileY + nameH / 2f
         canvas.drawText(name, nameX, nameY, nameTextPaint)
     }
@@ -341,27 +341,29 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     private fun writeDate(text: String, canvas: Canvas) {
-        canvas.rotate(-90f, width / 36f, height - 30f - offset)
-        canvas.translate(height / 20f, width / 20f)
-        canvas.drawText(text, width / 36f + offsetSmall, height - 30f - offset, dateTextPaint)
-        canvas.translate(height / -20f, width / -20f)
-        canvas.rotate(90f, width / 36f, height - 30f - offset)
+        canvas.apply {
+            rotate(-90f, width * .895f - offsetSmall, height - 30f - offset)
+            translate(height / 20f, width / 16f)
+            drawText(text, width * .895f - offsetSmall, height - 30f - offset, dateTextPaint)
+            translate(height / -20f, width / -16f)
+            rotate(90f, width * .895f - offsetSmall, height - 30f - offset)
+        }
     }
 
     private fun drawPart1(canvas: Canvas) {
         part1Path.apply {
-            lineTo(width / 8f, offsetSmall)
-            lineTo(width / 8f, height - offset)
-            lineTo(offsetSmall + cornerRadius, height - offset)
+            lineTo(width - offsetSmall, height - offset - cornerRadius)
             arcTo(
-                offsetSmall,
+                width - offsetSmall - cornerRadius,
                 height - offset - cornerRadius,
-                offsetSmall + cornerRadius,
+                width - offsetSmall,
                 height - offset,
-                90f,
+                0f,
                 90f,
                 false
             )
+            lineTo(width * .875f, height - offset)
+            lineTo(width * .875f, offsetSmall)
         }
 
         canvas.drawPath(part1Path, part1Paint)
@@ -371,33 +373,33 @@ class CreditTypeView @JvmOverloads constructor(
         drawShadow(canvas)
 
         curvePath.apply {
-            lineTo(width - offset - cornerRadius, offsetSmall)
+            lineTo(width - offsetSmall, height - offset - cornerRadius)
             arcTo(
-                width - offset - cornerRadius,
-                offsetSmall,
-                width - offset,
-                offsetSmall + cornerRadius,
-                270f,
-                90f,
-                false
-            )
-            lineTo(width - offset, height - offset - cornerRadius)
-            arcTo(
-                width - offset - cornerRadius,
+                width - offsetSmall - cornerRadius,
                 height - offset - cornerRadius,
-                width - offset,
+                width - offsetSmall,
                 height - offset,
                 0f,
                 90f,
                 false
             )
-            lineTo(cornerRadius + offsetSmall, height - offset)
+            lineTo(offset + cornerRadius, height - offset)
             arcTo(
-                offsetSmall,
+                offset,
                 height - offset - cornerRadius,
-                offsetSmall + cornerRadius,
+                offset + cornerRadius,
                 height - offset,
                 90f,
+                90f,
+                false
+            )
+            lineTo(offset, offsetSmall + cornerRadius)
+            arcTo(
+                offset,
+                offsetSmall,
+                offset + cornerRadius,
+                offsetSmall + cornerRadius,
+                180f,
                 90f,
                 false
             )
@@ -408,16 +410,6 @@ class CreditTypeView @JvmOverloads constructor(
 
     private fun drawShadow(canvas: Canvas) {
         shadowPath.apply {
-            lineTo(width - cornerRadius, 0f)
-            arcTo(
-                width - cornerRadius,
-                0f,
-                width.toFloat(),
-                cornerRadius,
-                270f,
-                90f,
-                false
-            )
             lineTo(width.toFloat(), height - cornerRadius)
             arcTo(
                 width - cornerRadius,
@@ -435,6 +427,16 @@ class CreditTypeView @JvmOverloads constructor(
                 cornerRadius,
                 height.toFloat(),
                 90f,
+                90f,
+                false
+            )
+            lineTo(0f, cornerRadius)
+            arcTo(
+                0f,
+                0f,
+                cornerRadius,
+                cornerRadius,
+                180f,
                 90f,
                 false
             )

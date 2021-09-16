@@ -8,18 +8,20 @@
     tools:context=".MainActivity"
     android:padding="8dp">
 
-    <com.nishant.customview.views.PaymentCard
+    <com.nishant.customview.views.CreditTypeView
         android:id="@+id/card1"
         android:layout_width="match_parent"
-        android:layout_height="175dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="175dp" />
 
-    <com.nishant.customview.views.PaymentCard
+    <com.nishant.customview.views.DebitTypeView
+        android:id="@+id/card3"
+        android:layout_width="match_parent"
+        android:layout_height="176dp" />
+
+    <com.nishant.customview.views.CreditTypeView
         android:id="@+id/card2"
         android:layout_width="match_parent"
-        android:layout_height="175dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="175dp" />
+
 
 </LinearLayout>
