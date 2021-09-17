@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:padding="8dp">
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
 
     <com.nishant.customview.views.CreditTypeView
         android:id="@+id/card1"
@@ -23,32 +23,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <com.nishant.customview.views.IconView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4">
+        custom:iconDrawable="@drawable/ic_baseline_refresh_24"
+        custom:text="Refresh" />
 
-        <com.nishant.customview.views.IconView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:weightSum="4">-->
 
-        <com.nishant.customview.views.IconView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+    <!--        <com.nishant.customview.views.IconView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"/>-->
 
-        <com.nishant.customview.views.IconView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+    <!--        <com.nishant.customview.views.IconView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"/>-->
 
-        <com.nishant.customview.views.IconView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+    <!--        <com.nishant.customview.views.IconView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"/>-->
 
-    </LinearLayout>
+    <!--        <com.nishant.customview.views.IconView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"/>-->
+
+    <!--    </LinearLayout>-->
 
 </LinearLayout>

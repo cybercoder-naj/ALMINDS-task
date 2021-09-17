@@ -14,3 +14,19 @@ fun Bitmap.getCircledBitmap(): Bitmap {
     canvas.drawBitmap(this, rect, rect, paint)
     return output
 }
+
+fun Bitmap.tint(color: Int): Bitmap {
+    val bitmap = Bitmap.createBitmap(width, height, config)
+
+    for (i in 0 until width) {
+        for (j in 0 until height) {
+            val p = getPixel(i, j)
+
+            if (p != Color.TRANSPARENT)
+                bitmap.setPixel(i, j, color)
+            else
+                bitmap.setPixel(i, j, Color.TRANSPARENT)
+        }
+    }
+    return bitmap
+}

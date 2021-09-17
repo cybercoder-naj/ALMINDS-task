@@ -1,9 +1,13 @@
 package com.nishant.customview
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.views.CreditTypeView
 import com.nishant.customview.views.DebitTypeView
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +38,23 @@ class MainActivity : AppCompatActivity() {
             method = "UPI"
             transactionType = "Dr"
             amount = 3500f
+        }
+
+        val bitmap = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_refresh_24, null)?.toBitmap()
+        bitmap?.let {
+            val sb = StringBuilder()
+            for (i in 0 until it.width) {
+                for (j in 0 until it.height) {
+                    val p = it.getPixel(i, j)
+                    sb.append(
+                        if (p == Color.TRANSPARENT)
+                            "T"
+                        else "W"
+                    ).append(" ")
+                }
+                sb.append("\n")
+            }
+            println(sb)
         }
     }
 }
