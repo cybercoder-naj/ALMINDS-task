@@ -205,7 +205,7 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 100
+        val desiredWidth = 1024
         val desiredHeight = 450
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
