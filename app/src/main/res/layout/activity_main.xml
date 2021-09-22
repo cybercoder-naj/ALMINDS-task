@@ -14,28 +14,28 @@
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <com.nishant.customview.views.IconView
+        <com.nishant.customview.views.TransferIcon
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:iconDrawable="@drawable/ic_baseline_refresh_24"
             app:text="Refresh" />
 
-        <com.nishant.customview.views.IconView
+        <com.nishant.customview.views.TransferIcon
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:iconDrawable="@drawable/ic_baseline_refresh_24"
             app:text="Refresh" />
 
-        <com.nishant.customview.views.IconView
+        <com.nishant.customview.views.TransferIcon
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:iconDrawable="@drawable/ic_baseline_refresh_24"
             app:text="Refresh" />
 
-        <com.nishant.customview.views.IconView
+        <com.nishant.customview.views.TransferIcon
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

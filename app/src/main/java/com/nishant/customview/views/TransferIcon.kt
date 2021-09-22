@@ -10,10 +10,12 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.R
+import com.nishant.customview.dp
+import com.nishant.customview.sp
 import com.nishant.customview.tint
 import kotlin.math.min
 
-class IconView @JvmOverloads constructor(
+class TransferIcon @JvmOverloads constructor(
     ctx: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
@@ -32,9 +34,9 @@ class IconView @JvmOverloads constructor(
         }
 
     init {
-        with(context.obtainStyledAttributes(attrs, R.styleable.IconView)) {
-            text = getString(R.styleable.IconView_text)
-            icon = getDrawable(R.styleable.IconView_iconDrawable)
+        with(context.obtainStyledAttributes(attrs, R.styleable.TransferIcon)) {
+            text = getString(R.styleable.TransferIcon_text)
+            icon = getDrawable(R.styleable.TransferIcon_iconDrawable)
             recycle()
         }
 
@@ -55,8 +57,8 @@ class IconView @JvmOverloads constructor(
     }
     private val textPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        textSize = 48f
-        strokeWidth = 2f
+        textSize = 18.sp
+        strokeWidth = 1.dp
     }
     private val textBounds = Rect()
     private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
@@ -65,8 +67,8 @@ class IconView @JvmOverloads constructor(
     private val iconRect = RectF()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 300
-        val desiredHeight = 360
+        val desiredWidth = 100.dp.toInt()
+        val desiredHeight = 150.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -110,13 +112,13 @@ class IconView @JvmOverloads constructor(
         val iconR = width * .3f
 
         iconRect.apply {
-            left = iconX - iconR + 20f
-            top = iconY - iconR + 20f
-            right = iconX + iconR - 20f
-            bottom = iconY + iconR - 20f
+            left = iconX - iconR + 10.dp
+            top = iconY - iconR + 10.dp
+            right = iconX + iconR - 10.dp
+            bottom = iconY + iconR - 10.dp
         }
 
-        canvas.drawCircle(iconX, iconY + 12f, iconR, shadowPaint)
+        canvas.drawCircle(iconX, iconY + 6.dp, iconR, shadowPaint)
         canvas.drawCircle(iconX, iconY, iconR, iconBgPaint)
         icon?.toBitmap()?.let {
             canvas.drawBitmap(

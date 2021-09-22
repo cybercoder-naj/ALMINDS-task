@@ -6,13 +6,28 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.adapters.TransactionsAdapter
+import com.nishant.customview.adapters.TransferAdapter
 import com.nishant.customview.models.TransactionItem
+import com.nishant.customview.models.TransferIconData
 
 class TransactionsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transactions)
+
+        findViewById<RecyclerView>(R.id.transferRecyclerView).apply {
+            layoutManager = LinearLayoutManager(this@TransactionsActivity, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = TransferAdapter(
+                listOf(
+                    TransferIconData("Refresh", R.drawable.ic_baseline_refresh_24),
+                    TransferIconData("Refresh", R.drawable.ic_baseline_refresh_24),
+                    TransferIconData("Refresh", R.drawable.ic_baseline_refresh_24),
+                    TransferIconData("Refresh", R.drawable.ic_baseline_refresh_24)
+                )
+            )
+        }
 
         bindTransactionItems(
             findViewById<RecyclerView>(R.id.transactionsRecyclerView).apply {
