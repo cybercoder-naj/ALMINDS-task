@@ -11,6 +11,7 @@ data class TransactionItem (
     companion object {
         const val CREDIT = "Cr"
         const val DEBIT = "Dr"
+        const val DATE = "date"
     }
 
     constructor(): this("", "", "", "", -1f, "")

@@ -13,8 +13,9 @@ class TransactionsAdapter(
     private var transactions: List<TransactionItem>
 ) : RecyclerView.Adapter<TransactionsAdapter.BindableViewHolder>() {
     companion object {
-        private const val CREDIT = 1
         private const val DEBIT = 0
+        private const val CREDIT = 1
+        private const val DATE = 2
     }
 
     class BindableViewHolder(private val binding: ViewDataBinding) :
@@ -28,7 +29,7 @@ class TransactionsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            if (viewType == CREDIT) R.layout.layout_credit else R.layout.layout_debit,
+            if (viewType == CREDIT) R.layout.layout_credit else if (viewType == DEBIT) R.layout.layout_debit else R.layout.layout_date,
             parent,
             false
         )
@@ -47,7 +48,9 @@ class TransactionsAdapter(
     override fun getItemViewType(position: Int) =
         if (transactions[position].type == TransactionItem.DEBIT)
             DEBIT
-        else CREDIT
+        else if (transactions[position].type == TransactionItem.CREDIT)
+            CREDIT
+    else DATE
 
     override fun getItemCount() = transactions.size
 }

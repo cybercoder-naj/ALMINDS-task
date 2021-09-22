@@ -35,6 +35,14 @@ class TransactionsActivity : AppCompatActivity() {
                 setHasFixedSize(true)
             }, listOf(
                 TransactionItem(
+                    "",
+                    "",
+                    "Sep 2021",
+                    "",
+                    -1f,
+                    TransactionItem.DATE
+                ),
+                TransactionItem(
                     "Nishant",
                     "https://cybercoder-naj.github.io/assets/nishant.png",
                     "21 Sep 2021 22:24:10",
