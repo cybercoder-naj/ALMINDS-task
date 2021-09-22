@@ -4,4 +4,13 @@
         <attr name="text" format="string" />
         <attr name="iconDrawable" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="BankIcon">
+        <attr name="textBank" format="string" />
+        <attr name="bankIcon" format="reference" />
+        <attr name="checked" format="boolean" />
+        <attr name="textColor" format="color" />
+        <attr name="textCheckedColor" format="color" />
+        <attr name="boldCheckedText" format="boolean" />
+    </declare-styleable>
 </resources>

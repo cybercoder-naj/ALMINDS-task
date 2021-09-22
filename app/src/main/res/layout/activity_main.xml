@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,53 +29,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            custom:iconDrawable="@drawable/ic_baseline_refresh_24"
-            custom:text="Refresh" />
+            app:iconDrawable="@drawable/ic_baseline_refresh_24"
+            app:text="Refresh" />
 
         <com.nishant.customview.views.IconView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            custom:iconDrawable="@drawable/ic_baseline_refresh_24"
-            custom:text="Refresh" />
+            app:iconDrawable="@drawable/ic_baseline_refresh_24"
+            app:text="Refresh" />
 
         <com.nishant.customview.views.IconView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            custom:iconDrawable="@drawable/ic_baseline_refresh_24"
-            custom:text="Refresh" />
+            app:iconDrawable="@drawable/ic_baseline_refresh_24"
+            app:text="Refresh" />
 
         <com.nishant.customview.views.IconView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            custom:iconDrawable="@drawable/ic_baseline_refresh_24"
-            custom:text="Refresh" />
+            app:iconDrawable="@drawable/ic_baseline_refresh_24"
+            app:text="Refresh" />
 
     </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.nishant.customview.views.SearchBar
         android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:textColorHint="#BCBCBC">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/searchEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_search_24"
-            android:drawablePadding="8dp"
-            android:background="@drawable/bg_textinput"
-            android:hint="Search name, number or UPI"
-            android:drawableTint="#989898" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnBottomSheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bottom Sheet"/>
+
+    <Button
+        android:id="@+id/btnBottomSheet2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom Sheet"/>
+
 </LinearLayout>

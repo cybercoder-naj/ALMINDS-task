@@ -1,5 +1,6 @@
 package com.nishant.customview
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -8,10 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.nishant.customview.views.RoundedBottomSheetFragment
 
-private const val TAG = "BottomSheetFragment"
-class BottomSheetFragment : BottomSheetDialogFragment() {
+class PostTransactionDialog : RoundedBottomSheetFragment() {
 
     private var _primaryAction: TextView? = null
     val primaryAction: TextView
@@ -22,12 +24,9 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         get() = _secondaryAction!!
 
     private var _listener: BottomSheetListener? = null
-    private val listener: BottomSheetListener
-        get() = _listener!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, 0)
     }
 
     interface BottomSheetListener {
@@ -45,9 +44,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.layout_bottom_sheet, container, false)
-        dialog?.setCanceledOnTouchOutside(true)
-        return view
+        return inflater.inflate(R.layout.layout_bottom_sheet, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +54,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        listener.handleOnCancel()
+        _listener?.handleOnCancel()
     }
 
     override fun onDetach() {

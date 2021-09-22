@@ -3,7 +3,6 @@ package com.nishant.customview
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.nishant.customview.views.CreditTypeView
 import com.nishant.customview.views.DebitTypeView
 
@@ -29,20 +28,17 @@ class MainActivity : AppCompatActivity() {
             amount = 3500f
         }
 
-//        findViewById<EditText>(R.id.searchEditText).apply {
-//            setBackgroundResource(R.drawable.bg_textinput)
-//            setCompoundDrawables(
-//                ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_search_24, null),
-//                null,
-//                null,
-//                null
-//            )
-//            compoundDrawablePadding = 2
-//        }
-
         findViewById<Button>(R.id.btnBottomSheet).apply {
             setOnClickListener {
-                BottomSheetFragment().also {
+                PostTransactionDialog().also {
+                    it.show(supportFragmentManager, it.tag)
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btnBottomSheet2).apply {
+            setOnClickListener {
+                SavingsAccountDialog().also {
                     it.show(supportFragmentManager, it.tag)
                 }
             }
