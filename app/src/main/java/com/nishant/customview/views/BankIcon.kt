@@ -7,7 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.R
+import com.nishant.customview.dp
 import com.nishant.customview.getCircledBitmap
+import com.nishant.customview.sp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -56,7 +58,7 @@ class BankIcon @JvmOverloads constructor(
     private val iconRect = RectF()
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        textSize = 48f
+        textSize = 22.sp
     }
     private val textBounds = Rect()
     private val checkedCirclePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -68,7 +70,8 @@ class BankIcon @JvmOverloads constructor(
     }
     private val tickPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        strokeWidth = 4f
+        strokeWidth = 2.dp
+        strokeCap = Paint.Cap.ROUND
         color = Color.WHITE
     }
 
@@ -90,8 +93,8 @@ class BankIcon @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 225
-        val desiredHeight = 325
+        val desiredWidth = 84.dp.toInt()
+        val desiredHeight = 128.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -135,7 +138,7 @@ class BankIcon @JvmOverloads constructor(
 
         if (checked) {
             checkedCirclePaint.color = textColorWhenChecked
-            canvas.drawCircle(iconX, iconY, iconR + 8f, checkedCirclePaint)
+            canvas.drawCircle(iconX, iconY, iconR + 3.dp, checkedCirclePaint)
         }
         icon?.toBitmap()?.let {
             canvas.drawBitmap(

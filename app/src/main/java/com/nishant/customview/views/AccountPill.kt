@@ -5,7 +5,9 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.Paint.Style
 import android.util.AttributeSet
+import com.nishant.customview.dp
 import android.view.View
+import com.nishant.customview.sp
 import kotlin.math.min
 
 class AccountPill @JvmOverloads constructor(
@@ -43,20 +45,20 @@ class AccountPill @JvmOverloads constructor(
     private val textBounds = Rect()
     private val selectedStroke = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.STROKE
-        strokeWidth = 5f
+        strokeWidth = 2.dp
     }
     private val selectedFill = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.FILL
-        strokeWidth = 5f
     }
     private val textPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.FILL_AND_STROKE
-        textSize = 36f
-        strokeWidth = 2f
+        textSize = 18.sp
+        strokeWidth = 1.dp
     }
     private val tickPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Style.FILL_AND_STROKE
-        strokeWidth = 4f
+        strokeWidth = 2.dp
+        strokeCap = Paint.Cap.ROUND
         color = Color.WHITE
     }
 
@@ -67,8 +69,8 @@ class AccountPill @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 512
-        val desiredHeight = 150
+        val desiredWidth = 250.dp.toInt()
+        val desiredHeight = 60.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -98,8 +100,8 @@ class AccountPill @JvmOverloads constructor(
         selectedFill.color = if (checked) selectedColor else color
         textPaint.color = if (checked) selectedColor else Color.parseColor("#839BB9")
 
-        val cornerRadius = height * 1f
-        val padding = 4f
+        val cornerRadius = height.toFloat()
+        val padding = 2.dp
         viewPath.apply {
             moveTo(cornerRadius + padding, padding)
             lineTo(width - cornerRadius - padding, padding)

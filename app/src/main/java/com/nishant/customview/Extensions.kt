@@ -1,6 +1,8 @@
 package com.nishant.customview
 
+import android.content.res.Resources
 import android.graphics.*
+import android.util.TypedValue
 
 fun Bitmap.getCircledBitmap(): Bitmap {
     val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
@@ -30,3 +32,31 @@ fun Bitmap.tint(color: Int): Bitmap {
     }
     return bitmap
 }
+
+val Float.dp
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+
+val Float.sp
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+
+val Int.dp
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        toFloat(),
+        Resources.getSystem().displayMetrics
+    )
+
+val Int.sp
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        toFloat(),
+        Resources.getSystem().displayMetrics
+    )

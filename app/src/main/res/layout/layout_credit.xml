@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="modal"
+            type="com.nishant.customview.models.TransactionItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <com.nishant.customview.views.CreditTypeView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:creditName="@{modal.name}"
+            app:amountCr="@{modal.amount}"
+            app:methodCr="@{modal.method}"
+            app:imageCr="@{modal.imageUrl}"
+            app:datetimeCr="@{modal.datetime}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

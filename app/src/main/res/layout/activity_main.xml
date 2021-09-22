@@ -8,17 +8,6 @@
     android:padding="8dp"
     tools:context=".MainActivity">
 
-    <com.nishant.customview.views.CreditTypeView
-        android:id="@+id/card1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.nishant.customview.views.DebitTypeView
-        android:id="@+id/card3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,5 +59,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bottom Sheet"/>
+
+    <Button
+        android:id="@+id/btnTransActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction Activity" />
+
+
 
 </LinearLayout>

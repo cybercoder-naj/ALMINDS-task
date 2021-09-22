@@ -5,7 +5,6 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -13,7 +12,12 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.nishant.customview.R
+import com.nishant.customview.dp
 import com.nishant.customview.getCircledBitmap
+import com.nishant.customview.models.TransactionItem
+import com.nishant.customview.sp
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.round
@@ -27,8 +31,10 @@ class CreditTypeView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    private var offset = 30f
+    private var offset = 6.dp
     private var offsetSmall = offset / 3f
+
+    private val dateBounds = Rect()
 
     private var profileX = 0f
     private var profileY = 0f
@@ -79,38 +85,38 @@ class CreditTypeView @JvmOverloads constructor(
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        textSize = 48f
-        strokeWidth = 2f
+        textSize = 18.sp
+        strokeWidth = 1.dp
     }
     private val nameTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 72f
-        strokeWidth = 2f
+        textSize = 26.sp
+        strokeWidth = 1.dp
     }
     private val methodTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#8498AB")
-        textSize = 56f
-        strokeWidth = 2f
+        textSize = 22.sp
+        strokeWidth = 1.dp
     }
     private val transactionTypePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#37D8CF")
-        textSize = 56f
-        strokeWidth = 2f
+        textSize = 22.sp
+        strokeWidth = 1.dp
     }
     private val amountIntegralPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 64f
-        strokeWidth = 4f
+        textSize = 24.sp
+        strokeWidth = 2.dp
     }
     private val amountFractionalPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 48f
-        strokeWidth = 2f
+        textSize = 22.sp
+        strokeWidth = 1.dp
     }
     private val dotPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -119,11 +125,11 @@ class CreditTypeView @JvmOverloads constructor(
     private val bgPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        strokeWidth = 2f
+        strokeWidth = 1.dp
     }
-    private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
+    private val shadowFilter = BlurMaskFilter(320f, BlurMaskFilter.Blur.NORMAL)
 
-    var image: String? = null
+    var imageCr: String? = null
         set(value) {
             field = value
             imageType = "url"
@@ -152,32 +158,32 @@ class CreditTypeView @JvmOverloads constructor(
             field = value
             postInvalidate()
         }
-    var name: String? = null
+    var creditName: String? = null
         set(value) {
             field = value
             postInvalidate()
         }
-    var date: String? = null
+    var datetimeCr: String? = null
+        set(value) {
+            field = value?.let { getDateTime(it) }
+            postInvalidate()
+        }
+    var methodCr: String? = null
         set(value) {
             field = value
             postInvalidate()
         }
-    var method: String? = null
-        set(value) {
-            field = value
-            postInvalidate()
-        }
-    var amount: Float = -1f
+    var amountCr: Float = -1f
         set(value) {
             field = round(value * 100f) / 100f
             postInvalidate()
         }
-    var transactionType: String? = null
+    var transactionType: String? = "Cr"
         set(value) {
             field = value
             postInvalidate()
         }
-    var cornerRadius = 100f
+    var cornerRadius = 40.dp
         set(value) {
             field = value * 2
             postInvalidate()
@@ -196,17 +202,47 @@ class CreditTypeView @JvmOverloads constructor(
             offsetSmall = value / 3f
         }
 
-    constructor(ctx: Context, obj: Any) : this(ctx) {
-        setObj(obj)
+    init {
+        with(context.obtainStyledAttributes(attrs, R.styleable.CreditTypeView)) {
+            creditName = getString(R.styleable.CreditTypeView_creditName)
+            imageCr = getString(R.styleable.CreditTypeView_imageCr)
+            methodCr = getString(R.styleable.CreditTypeView_methodCr)
+            datetimeCr = getString(R.styleable.CreditTypeView_datetimeCr)
+            amountCr = getFloat(R.styleable.CreditTypeView_amountCr, -1f)
+            recycle()
+        }
     }
 
-    fun setObj(obj: Any) {
-        // TODO configure
+    constructor(ctx: Context, transactionItem: TransactionItem) : this(ctx) {
+        if (transactionItem.type != TransactionItem.CREDIT)
+            throw IllegalArgumentException("Credit type does not match passing object.")
+
+        setProperties(transactionItem)
+    }
+
+    private fun getDateTime(datetime: String): String {
+        val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val today = dateFormat.format(Date(Calendar.getInstance().timeInMillis))
+        val date = datetime.substring(0, datetime.lastIndexOf(" "))
+
+        return if (today != date)
+            date
+        else
+            datetime.substring(datetime.lastIndexOf(" ") + 1)
+    }
+
+    fun setProperties(transactionItem: TransactionItem) {
+        with(transactionItem) {
+            creditName = name
+            imageCr = imageUrl
+            methodCr = method
+            datetimeCr = datetime
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 1024
-        val desiredHeight = 450
+        val desiredWidth = 360.dp.toInt()
+        val desiredHeight = 175.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -237,14 +273,14 @@ class CreditTypeView @JvmOverloads constructor(
         profileR = (height - offset) / 5.5f
 
         profileRect.apply {
-            left = profileX - profileR + 12f
-            top = profileY - profileR + 12f
-            right = profileX + profileR - 12f
-            bottom = profileY + profileR - 12f
+            left = profileX - profileR + 4.dp
+            top = profileY - profileR + 4.dp
+            right = profileX + profileR - 4.dp
+            bottom = profileY + profileR - 4.dp
         }
 
         shadowPaint.apply {
-            color = Color.parseColor("#DDDDDD")
+            color = Color.parseColor("#22000000")
             maskFilter = shadowFilter
         }
 
@@ -254,15 +290,15 @@ class CreditTypeView @JvmOverloads constructor(
             canvas.drawBitmap(it, width / 36f, height / 15.3f, null)
         }
 
-        date?.let { writeDate(it, canvas) }
+        datetimeCr?.let { writeDate(it, canvas) }
         imageBitmap?.let { paintBitmap(it, canvas) }
-        name?.let { writeName(it, canvas) }
+        creditName?.let { writeName(it, canvas) }
         if (!drawDot(canvas))
             return
-        method?.let { writeMethod(it, canvas) }
+        methodCr?.let { writeMethod(it, canvas) }
         transactionType?.let { writeTransactionType(it, canvas) }
-        if (amount != -1f)
-            writeAmount(amount, canvas)
+        if (amountCr != -1f)
+            writeAmount(amountCr, canvas)
         rightArrow?.toBitmap()?.let {
             canvas.drawBitmap(it, width * .825f, transactionY - it.height, null)
         }
@@ -285,19 +321,19 @@ class CreditTypeView @JvmOverloads constructor(
         }
 
         amountFractionalPaint.getTextBounds(fractional, 0, fractional.length, fractionalBounds)
-        val fractionalX = transactionX - fractionalBounds.width() - 16f
+        val fractionalX = transactionX - fractionalBounds.width() - 8.dp
         val fractionalY = transactionY
         canvas.drawText(fractional, fractionalX, fractionalY, amountFractionalPaint)
 
         amountIntegralPaint.getTextBounds(integral, 0, integral.length, integralBounds)
-        val amountX = fractionalX - integralBounds.width() - 10f
+        val amountX = fractionalX - integralBounds.width() - 5.dp
         canvas.drawText(integral, amountX, fractionalY, amountIntegralPaint)
 
         val rupee = "\u20B9"
         amountFractionalPaint.getTextBounds(rupee, 0, 1, rupeeBounds)
         canvas.drawText(
             rupee,
-            amountX - rupeeBounds.width() - 12f,
+            amountX - rupeeBounds.width() - 6.dp,
             fractionalY,
             amountFractionalPaint
         )
@@ -324,12 +360,12 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     private fun drawDot(canvas: Canvas): Boolean {
-        if (name == null || method == null)
+        if (creditName == null || methodCr == null)
             return false
 
         dotX = nameX - width / 32f
         dotY = nameY - nameH / 2.75f
-        canvas.drawCircle(dotX, dotY, 10f, dotPaint)
+        canvas.drawCircle(dotX, dotY, 4.dp, dotPaint)
         return true
     }
 
@@ -345,8 +381,8 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     private fun paintBitmap(bitmap: Bitmap, canvas: Canvas) {
-        canvas.drawCircle(profileX - 8f, profileY + 8f, profileR, shadowPaint)
-        canvas.drawCircle(profileX, profileY, profileR - 8f, bgPaint)
+        canvas.drawCircle(profileX - 8f, profileY + 3.dp, profileR, shadowPaint)
+        canvas.drawCircle(profileX, profileY, profileR - 3.dp, bgPaint)
 
         canvas.drawBitmap(
             bitmap.getCircledBitmap(),
@@ -357,11 +393,13 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     private fun writeDate(text: String, canvas: Canvas) {
-        canvas.rotate(-90f, width / 36f, height - 30f - offset)
-        canvas.translate(height / 20f, width / 20f)
-        canvas.drawText(text, width / 36f + offsetSmall, height - 30f - offset, dateTextPaint)
-        canvas.translate(height / -20f, width / -20f)
-        canvas.rotate(90f, width / 36f, height - 30f - offset)
+        dateTextPaint.getTextBounds(text, 0, text.length, dateBounds)
+
+        canvas.rotate(-90f, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp)
+        canvas.translate(10.dp, 2.dp)
+        canvas.drawText(text, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp, dateTextPaint)
+        canvas.translate(-(10.dp), (-2).dp)
+        canvas.rotate(90f, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp)
     }
 
     private fun drawPart1(canvas: Canvas) {

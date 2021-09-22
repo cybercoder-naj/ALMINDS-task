@@ -13,4 +13,20 @@
         <attr name="textCheckedColor" format="color" />
         <attr name="boldCheckedText" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="DebitTypeView">
+        <attr name="debitName" format="string" />
+        <attr name="imageDr" format="string" />
+        <attr name="datetimeDr" format="string" />
+        <attr name="methodDr" format="string" />
+        <attr name="amountDr" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="CreditTypeView">
+        <attr name="creditName" format="string" />
+        <attr name="imageCr" format="string" />
+        <attr name="datetimeCr" format="string" />
+        <attr name="methodCr" format="string" />
+        <attr name="amountCr" format="float" />
+    </declare-styleable>
 </resources>
