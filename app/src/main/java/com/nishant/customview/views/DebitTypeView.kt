@@ -22,8 +22,6 @@ import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.round
 
-private const val TAG = "DebitTypeView"
-
 class DebitTypeView @JvmOverloads constructor(
     ctx: Context,
     attrs: AttributeSet? = null,
@@ -101,7 +99,7 @@ class DebitTypeView @JvmOverloads constructor(
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
         textSize = 24.sp
-        strokeWidth = 2.dp
+        strokeWidth = 1.5f.dp
     }
     private val amountFractionalPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE

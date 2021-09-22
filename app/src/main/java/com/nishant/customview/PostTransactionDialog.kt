@@ -1,6 +1,5 @@
 package com.nishant.customview
 
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -8,10 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.nishant.customview.views.RoundedBottomSheetFragment
 
 class PostTransactionDialog : RoundedBottomSheetFragment() {
 

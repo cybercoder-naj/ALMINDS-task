@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.adapters.AccountsAdapter
 import com.nishant.customview.adapters.BanksAdapter
 import com.nishant.customview.models.Bank
-import com.nishant.customview.views.RoundedBottomSheetFragment
 
 class SavingsAccountDialog : RoundedBottomSheetFragment() {
 

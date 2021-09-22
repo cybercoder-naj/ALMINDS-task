@@ -112,10 +112,10 @@ class TransferIcon @JvmOverloads constructor(
         val iconR = width * .3f
 
         iconRect.apply {
-            left = iconX - iconR + 10.dp
-            top = iconY - iconR + 10.dp
-            right = iconX + iconR - 10.dp
-            bottom = iconY + iconR - 10.dp
+            left = iconX - iconR + 16.dp
+            top = iconY - iconR + 16.dp
+            right = iconX + iconR - 16.dp
+            bottom = iconY + iconR - 16.dp
         }
 
         canvas.drawCircle(iconX, iconY + 6.dp, iconR, shadowPaint)
