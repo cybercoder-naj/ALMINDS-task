@@ -1,4 +1,4 @@
-package com.nishant.customview
+package com.nishant.customview.ui.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nishant.customview.R
+import com.nishant.customview.RoundedBottomSheetFragment
 import com.nishant.customview.adapters.AccountsAdapter
 import com.nishant.customview.adapters.BanksAdapter
 import com.nishant.customview.models.Bank
@@ -17,7 +19,7 @@ class SavingsAccountDialog : RoundedBottomSheetFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.layout_bottom_sheet_2, container, false)
+        inflater.inflate(R.layout.dialog_savings_accounts, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val banksRecyclerView = view.findViewById<RecyclerView>(R.id.banksRecyclerView)

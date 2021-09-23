@@ -21,7 +21,9 @@ class TransferIcon @JvmOverloads constructor(
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
     private var icon: Drawable? = null
-        get() = ResourcesCompat.getDrawable(resources, iconRes, null)
+        get() = field?.let {
+            ResourcesCompat.getDrawable(resources, iconRes, null)
+        } ?: field
         set(value) {
             field = value
             postInvalidate()

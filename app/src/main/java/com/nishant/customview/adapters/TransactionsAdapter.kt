@@ -7,7 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.BR
-import com.nishant.customview.PostTransactionDialog
+import com.nishant.customview.ui.dialogs.PostTransactionDialog
 import com.nishant.customview.R
 import com.nishant.customview.models.TransactionItem
 
@@ -59,11 +59,11 @@ class TransactionsAdapter: RecyclerView.Adapter<TransactionsAdapter.BindableView
     }
 
     override fun getItemViewType(position: Int) =
-        if (transactions[position].type == TransactionItem.DEBIT)
-            DEBIT
-        else if (transactions[position].type == TransactionItem.CREDIT)
-            CREDIT
-        else DATE
+        when (transactions[position].type) {
+            TransactionItem.DEBIT -> DEBIT
+            TransactionItem.CREDIT -> CREDIT
+            else -> DATE
+        }
 
     override fun getItemCount() = transactions.size
 }

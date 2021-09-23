@@ -2,11 +2,10 @@ package com.nishant.customview.adapters
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.R
-import com.nishant.customview.SavingsAccountDialog
+import com.nishant.customview.ui.dialogs.SavingsAccountDialog
 import com.nishant.customview.models.TransferIconData
 import com.nishant.customview.views.TransferIcon
 
