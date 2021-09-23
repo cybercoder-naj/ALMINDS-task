@@ -20,14 +20,8 @@ class TransferIcon @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    private var icon: Drawable? = null
-        get() = field?.let {
-            ResourcesCompat.getDrawable(resources, iconRes, null)
-        } ?: field
-        set(value) {
-            field = value
-            postInvalidate()
-        }
+    private val icon: Drawable?
+        get() = ResourcesCompat.getDrawable(resources, iconRes, null)
 
     var iconRes: Int = 0
         set(value) {
@@ -39,14 +33,6 @@ class TransferIcon @JvmOverloads constructor(
             field = value
             postInvalidate()
         }
-
-    init {
-        with(context.obtainStyledAttributes(attrs, R.styleable.TransferIcon)) {
-            text = getString(R.styleable.TransferIcon_text)
-            icon = getDrawable(R.styleable.TransferIcon_iconDrawable)
-            recycle()
-        }
-    }
 
     var primaryColor: Int = Color.parseColor("#1B79E6")
     private val textColor = Color.parseColor("#8498AB")
