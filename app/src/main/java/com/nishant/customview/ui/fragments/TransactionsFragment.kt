@@ -46,12 +46,15 @@ class TransactionsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
             adapter = TransactionsAdapter().apply {
-                fragmentManager = childFragmentManager
+                fManager = childFragmentManager
             }
         }
         binding.transferRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
             setHasFixedSize(true)
+            adapter = TransferAdapter().apply {
+                fManager = childFragmentManager
+            }
         }
     }
 

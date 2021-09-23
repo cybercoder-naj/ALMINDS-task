@@ -1,7 +1,6 @@
 package com.nishant.customview.views
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.Drawable
@@ -12,7 +11,6 @@ import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.R
 import com.nishant.customview.dp
 import com.nishant.customview.sp
-import com.nishant.customview.tint
 import kotlin.math.min
 
 class TransferIcon @JvmOverloads constructor(
@@ -22,7 +20,14 @@ class TransferIcon @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    var icon: Drawable? = null
+    private var icon: Drawable? = null
+        get() = ResourcesCompat.getDrawable(resources, iconRes, null)
+        set(value) {
+            field = value
+            postInvalidate()
+        }
+
+    var iconRes: Int = 0
         set(value) {
             field = value
             postInvalidate()
@@ -38,11 +43,6 @@ class TransferIcon @JvmOverloads constructor(
             text = getString(R.styleable.TransferIcon_text)
             icon = getDrawable(R.styleable.TransferIcon_iconDrawable)
             recycle()
-        }
-
-        setOnClickListener {
-            checked = !checked
-            postInvalidate()
         }
     }
 
@@ -62,7 +62,6 @@ class TransferIcon @JvmOverloads constructor(
     }
     private val textBounds = Rect()
     private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
-    private var checked = false
 
     private val iconRect = RectF()
 
@@ -99,7 +98,7 @@ class TransferIcon @JvmOverloads constructor(
             maskFilter = shadowFilter
         }
 
-        if (checked) {
+        if (iconRes == R.drawable.ic_history) {
             iconBgPaint.color = primaryColor
             textPaint.color = primaryColor
         } else {
@@ -122,7 +121,7 @@ class TransferIcon @JvmOverloads constructor(
         canvas.drawCircle(iconX, iconY, iconR, iconBgPaint)
         icon?.toBitmap()?.let {
             canvas.drawBitmap(
-                it.tint(if (checked) Color.WHITE else primaryColor),
+                it,
                 null,
                 iconRect,
                 null

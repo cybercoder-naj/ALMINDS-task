@@ -3,20 +3,34 @@ package com.nishant.customview.adapters
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nishant.customview.R
+import com.nishant.customview.SavingsAccountDialog
 import com.nishant.customview.models.TransferIconData
 import com.nishant.customview.views.TransferIcon
 
 class TransferAdapter : RecyclerView.Adapter<TransferAdapter.TransferViewHolder>() {
-    class TransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    inner class TransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(transferIconData: TransferIconData) {
             if (itemView !is TransferIcon)
                 return
 
-            itemView.text = transferIconData.text
-            itemView.icon =
-                ResourcesCompat.getDrawable(itemView.context.resources, transferIconData.icon, null)
+            itemView.apply {
+                text = transferIconData.text
+                iconRes = transferIconData.icon
+            }
+
+            if (transferIconData.icon == R.drawable.ic_bank) {
+                itemView.setOnClickListener {
+                    fManager?.let { manager ->
+                        SavingsAccountDialog().apply {
+                            show(manager, tag)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -25,6 +39,8 @@ class TransferAdapter : RecyclerView.Adapter<TransferAdapter.TransferViewHolder>
             field = value
             notifyDataSetChanged()
         }
+
+    var fManager: FragmentManager? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         TransferViewHolder(TransferIcon(parent.context))

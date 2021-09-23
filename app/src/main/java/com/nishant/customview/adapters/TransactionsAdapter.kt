@@ -11,7 +11,7 @@ import com.nishant.customview.PostTransactionDialog
 import com.nishant.customview.R
 import com.nishant.customview.models.TransactionItem
 
-class TransactionsAdapter : RecyclerView.Adapter<TransactionsAdapter.BindableViewHolder>() {
+class TransactionsAdapter: RecyclerView.Adapter<TransactionsAdapter.BindableViewHolder>() {
     companion object {
         private const val DEBIT = 0
         private const val CREDIT = 1
@@ -24,14 +24,14 @@ class TransactionsAdapter : RecyclerView.Adapter<TransactionsAdapter.BindableVie
             notifyDataSetChanged()
         }
 
-    var fragmentManager: FragmentManager? = null
+    var fManager: FragmentManager? = null
 
     inner class BindableViewHolder(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
-                fragmentManager?.let { manager ->
+                fManager?.let { manager ->
                     PostTransactionDialog().apply {
                         show(manager, tag)
                     }
