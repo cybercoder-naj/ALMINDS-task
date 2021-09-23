@@ -9,14 +9,18 @@ import com.nishant.customview.BR
 import com.nishant.customview.R
 import com.nishant.customview.models.TransactionItem
 
-class TransactionsAdapter(
-    private var transactions: List<TransactionItem>
-) : RecyclerView.Adapter<TransactionsAdapter.BindableViewHolder>() {
+class TransactionsAdapter : RecyclerView.Adapter<TransactionsAdapter.BindableViewHolder>() {
     companion object {
         private const val DEBIT = 0
         private const val CREDIT = 1
         private const val DATE = 2
     }
+
+    var transactions: List<TransactionItem> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class BindableViewHolder(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,17 +44,12 @@ class TransactionsAdapter(
         holder.bind(transactions[position])
     }
 
-    fun updateItems(transactions: List<TransactionItem>) {
-        this.transactions = transactions
-        notifyDataSetChanged()
-    }
-
     override fun getItemViewType(position: Int) =
         if (transactions[position].type == TransactionItem.DEBIT)
             DEBIT
         else if (transactions[position].type == TransactionItem.CREDIT)
             CREDIT
-    else DATE
+        else DATE
 
     override fun getItemCount() = transactions.size
 }

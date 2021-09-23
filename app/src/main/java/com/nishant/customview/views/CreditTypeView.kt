@@ -125,7 +125,7 @@ class CreditTypeView @JvmOverloads constructor(
         color = Color.WHITE
         strokeWidth = 1.dp
     }
-    private val shadowFilter = BlurMaskFilter(320f, BlurMaskFilter.Blur.NORMAL)
+    private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
 
     var imageCr: String? = null
         set(value) {
@@ -239,7 +239,7 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 360.dp.toInt()
+        val desiredWidth = 320.dp.toInt()
         val desiredHeight = 175.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
@@ -278,7 +278,7 @@ class CreditTypeView @JvmOverloads constructor(
         }
 
         shadowPaint.apply {
-            color = Color.parseColor("#22000000")
+            color = Color.parseColor("#80CCCCCC")
             maskFilter = shadowFilter
         }
 

@@ -67,7 +67,7 @@ class TransferIcon @JvmOverloads constructor(
     private val iconRect = RectF()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 100.dp.toInt()
+        val desiredWidth = 96.dp.toInt()
         val desiredHeight = 150.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)

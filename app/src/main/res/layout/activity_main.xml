@@ -5,67 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4">
-
-        <com.nishant.customview.views.TransferIcon
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:iconDrawable="@drawable/ic_baseline_refresh_24"
-            app:text="Refresh" />
-
-        <com.nishant.customview.views.TransferIcon
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:iconDrawable="@drawable/ic_baseline_refresh_24"
-            app:text="Refresh" />
-
-        <com.nishant.customview.views.TransferIcon
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:iconDrawable="@drawable/ic_baseline_refresh_24"
-            app:text="Refresh" />
-
-        <com.nishant.customview.views.TransferIcon
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:iconDrawable="@drawable/ic_baseline_refresh_24"
-            app:text="Refresh" />
-
-    </LinearLayout>
-
-    <com.nishant.customview.views.SearchBar
-        android:layout_width="320dp"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnBottomSheet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bottom Sheet"/>
-
-    <Button
-        android:id="@+id/btnBottomSheet2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bottom Sheet"/>
-
-    <Button
-        android:id="@+id/btnTransActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transaction Activity" />
-
-
+        android:layout_height="match_parent" />
 
 </LinearLayout>

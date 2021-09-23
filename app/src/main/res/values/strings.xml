@@ -2,4 +2,5 @@
     <string name="app_name">CustomView</string>
     <string name="savings_accounts">Savings Accounts</string>
     <string name="select_savings_account_to_transfer">Select savings account to transfer</string>
+    <string name="past_transactions">Past Transactions</string>
 </resources>
