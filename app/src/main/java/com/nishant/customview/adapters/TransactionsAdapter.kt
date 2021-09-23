@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.BR
+import com.nishant.customview.PostTransactionDialog
 import com.nishant.customview.R
 import com.nishant.customview.models.TransactionItem
 
@@ -22,8 +24,20 @@ class TransactionsAdapter : RecyclerView.Adapter<TransactionsAdapter.BindableVie
             notifyDataSetChanged()
         }
 
-    class BindableViewHolder(private val binding: ViewDataBinding) :
+    var fragmentManager: FragmentManager? = null
+
+    inner class BindableViewHolder(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                fragmentManager?.let { manager ->
+                    PostTransactionDialog().apply {
+                        show(manager, tag)
+                    }
+                }
+            }
+        }
 
         fun bind(transactionItem: TransactionItem) {
             binding.setVariable(BR.modal, transactionItem)

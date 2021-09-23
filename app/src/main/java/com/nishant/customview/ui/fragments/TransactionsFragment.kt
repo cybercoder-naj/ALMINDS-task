@@ -45,6 +45,9 @@ class TransactionsFragment : Fragment() {
         binding.transactionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
+            adapter = TransactionsAdapter().apply {
+                fragmentManager = childFragmentManager
+            }
         }
         binding.transferRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)

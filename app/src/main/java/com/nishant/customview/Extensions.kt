@@ -1,8 +1,11 @@
 package com.nishant.customview
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.util.TypedValue
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 
 fun Bitmap.getCircledBitmap(): Bitmap {
     val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
@@ -31,6 +34,14 @@ fun Bitmap.tint(color: Int): Bitmap {
         }
     }
     return bitmap
+}
+
+fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, message, length).show()
+}
+
+fun Fragment.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
+    requireContext().toast(message, length)
 }
 
 val Float.dp
