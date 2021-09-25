@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.R
-import com.nishant.customview.RoundedBottomSheetFragment
 import com.nishant.customview.adapters.AccountsAdapter
 import com.nishant.customview.adapters.BanksAdapter
 import com.nishant.customview.models.Bank

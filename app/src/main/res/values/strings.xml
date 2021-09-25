@@ -5,4 +5,5 @@
     <string name="past_transactions">Past Transactions</string>
     <string name="pay_when_received">\"Pay\" when received</string>
     <string name="pay_again_when_paid">\"Pay again\" when paid</string>
+    <string name="choose_payment_method">Choose Payment Method</string>
 </resources>

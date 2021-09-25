@@ -1,4 +1,4 @@
-package com.nishant.customview
+package com.nishant.customview.ui.dialogs
 
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetDialog

@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.*
 import android.util.TypedValue
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 
 fun Bitmap.getCircledBitmap(): Bitmap {
@@ -26,6 +27,12 @@ fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
 
 fun Fragment.toast(message: String, length: Int = Toast.LENGTH_SHORT) {
     requireContext().toast(message, length)
+}
+
+@ColorInt
+fun Int.setAlpha(alpha: Int): Int {
+    val correctedAlpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
+    return Color.argb(correctedAlpha, Color.red(this), Color.blue(this), Color.green(this))
 }
 
 val Float.dp
