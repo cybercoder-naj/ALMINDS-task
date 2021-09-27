@@ -42,17 +42,17 @@ class TransactionsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.transactionsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-            adapter = TransactionsAdapter().apply {
-                fManager = childFragmentManager
-            }
-        }
         binding.transferRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = TransferAdapter().apply {
+                fManager = childFragmentManager
+            }
+        }
+        binding.transactionsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+            adapter = TransactionsAdapter().apply {
                 fManager = childFragmentManager
             }
         }

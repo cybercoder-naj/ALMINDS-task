@@ -57,12 +57,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_date_time_btn"
-            app:backgroundTint="@null"
             android:drawableLeft="@drawable/ic_date_time"
             android:text="@string/select_date_time"
             android:textAllCaps="false"
             android:textColor="#1B79E6"
             android:textSize="16sp"
+            app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/paymentMethodRecyclerView" />
@@ -73,10 +73,10 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
+            android:text="Confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnDateTime"
-            app:sheetText="Confirm" />
+            app:layout_constraintTop_toBottomOf="@id/btnDateTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

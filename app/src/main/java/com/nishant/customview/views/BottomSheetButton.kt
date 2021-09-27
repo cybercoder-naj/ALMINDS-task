@@ -17,7 +17,7 @@ class BottomSheetButton @JvmOverloads constructor(
 
     init {
         with(context.obtainStyledAttributes(attrs, R.styleable.BottomSheetButton)) {
-            text = getString(R.styleable.BottomSheetButton_sheetText)
+            text = getString(R.styleable.BottomSheetButton_android_text)
             recycle()
         }
         setBackgroundResource(R.drawable.bg_button)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_bottom"
     android:paddingBottom="24dp">
 
     <view
@@ -18,58 +18,60 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvPaymentMethod"
+        android:id="@+id/tvEnterAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:text="@string/savings_accounts"
+        android:text="@string/enter_amount"
         android:textColor="#243257"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line_bar" />
 
-    <TextView
-        android:id="@+id/tvSelectSavings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/select_savings_account_to_transfer"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/tvPaymentMethod"
-        app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/banksRecyclerView"
+    <com.nishant.customview.views.MyEditText
+        android:id="@+id/etAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tvPaymentMethod"
-        app:layout_constraintTop_toBottomOf="@id/tvSelectSavings" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/accountsRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="2dp"
-        android:background="#F8F8F8"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/banksRecyclerView" />
-
-    <com.nishant.customview.views.BottomSheetButton
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:text="Continue"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:hint="@string/enter_the_amount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/accountsRecyclerView" />
+        app:layout_constraintStart_toStartOf="@id/tvEnterAmount"
+        app:layout_constraintTop_toBottomOf="@id/tvEnterAmount" />
+
+    <TextView
+        android:id="@+id/tvRemainingBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        android:textColor="#989898"
+        app:layout_constraintEnd_toEndOf="@id/etAmount"
+        app:layout_constraintTop_toBottomOf="@id/etAmount"
+        android:text="Remaining Balance: 100,62,65,456.00" />
+
+    <com.nishant.customview.views.MyEditText
+        android:id="@+id/etNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:hint="@string/add_a_note"
+        app:layout_constraintEnd_toEndOf="@id/etAmount"
+        app:layout_constraintStart_toStartOf="@id/etAmount"
+        app:layout_constraintTop_toBottomOf="@id/tvRemainingBalance" />
+
+    <com.nishant.customview.views.BottomSheetButton
+        android:id="@+id/btnConfirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Confirm"
+        app:layout_constraintEnd_toEndOf="@id/etNote"
+        app:layout_constraintStart_toStartOf="@id/etNote"
+        app:layout_constraintTop_toBottomOf="@id/etNote" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

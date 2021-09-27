@@ -21,8 +21,6 @@ class DatePickerView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     companion object {
-        private const val TAG = "DatePickerView"
-
         private const val UP = 0
         private const val DOWN_LEFT_ARROW = 1
         private const val DOWN_RIGHT_ARROW = 2
@@ -352,7 +350,6 @@ class DatePickerView @JvmOverloads constructor(
 
             val day = getDay(currentYr, currentMon, index)
             datePaint.getTextBounds(day, 0, day.length, dateBounds)
-            val dayWidth = dateBounds.width()
             var actualX = midX + 92.dp * i
             if (touchEvent == DOWN_DATE_SELECT)
                 actualX += touchDx

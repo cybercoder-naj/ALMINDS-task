@@ -26,6 +26,12 @@
     </declare-styleable>
 
     <declare-styleable name="BottomSheetButton">
-        <attr name="sheetText" format="string" />
+        <attr name="android:text" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="MyEditText">
+        <attr name="android:hint" format="color" />
+        <attr name="android:drawableStart" format="reference" />
+        <attr name="password" format="boolean" />
     </declare-styleable>
 </resources>

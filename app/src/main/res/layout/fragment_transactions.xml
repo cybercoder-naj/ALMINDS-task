@@ -46,11 +46,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvPastTransactions" />
 
-        <com.nishant.customview.views.SearchBar
+        <com.nishant.customview.views.MyEditText
             android:id="@+id/searchBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:hint="@string/search_name_number_or_upi"
+            android:drawableStart="@drawable/ic_baseline_search_24"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -7,4 +7,15 @@
     <string name="pay_again_when_paid">\"Pay again\" when paid</string>
     <string name="choose_payment_method">Choose Payment Method</string>
     <string name="select_date_time"><![CDATA[Select date & time]]></string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="search_name_number_or_upi">Search name, number or UPI</string>
+    <string name="add_a_note">Add a note</string>
+    <string name="enter_the_amount">Enter the amount</string>
+    <string name="enter_transaction_password">Enter Transaction Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="transaction_password_disclaimer">
+        *After confirming the transaction password, the transaction can not be canceled or reversed
+    </string>
+    <string name="payment_successful">Payment Successful</string>
+    <string name="view_receipt">View Receipt</string>
 </resources>
