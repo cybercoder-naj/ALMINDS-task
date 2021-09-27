@@ -177,17 +177,6 @@ class DatePickerView @JvmOverloads constructor(
         firstDividerX = (width - 2 * paddingX) / 3f + paddingX
         secondDividerX = (width - 2 * paddingX) * 2f / 3f + paddingX
 
-        // TODO DELTE
-        canvas.drawLines(floatArrayOf(
-            width / 2f - threshold / 2f, 0f,
-            width / 2f - threshold / 2f, height.toFloat(),
-            width / 2f + threshold / 2f, 0f,
-            width / 2f + threshold / 2f, height.toFloat()
-        ), Paint().apply {
-            style = Style.STROKE
-            strokeWidth = 2.dp
-        })
-
         drawYearWithNavigateCircles(canvas)
         if (currentMon != -1)
             currentMon = currentMon
