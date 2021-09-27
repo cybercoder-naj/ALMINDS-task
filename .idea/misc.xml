@@ -6,12 +6,13 @@
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_bottom.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_bottom_sheet.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_button.xml" value="0.29140625" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_date_time_btn.xml" value="0.205859375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_payment_item.xml" value="0.27447916666666666" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_textinput.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/ic_dot.xml" value="0.27447916666666666" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/line_bar.xml" value="0.29140625" />
-        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/activity_main.xml" value="0.279296875" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/activity_second.xml" value="0.279296875" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/activity_transactions.xml" value="0.19375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/activity_tutorial.xml" value="0.25833333333333336" />

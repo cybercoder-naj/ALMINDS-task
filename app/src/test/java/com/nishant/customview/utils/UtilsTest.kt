@@ -1,4 +1,4 @@
-package com.nishant.customview
+package com.nishant.customview.utils
 
 import com.google.common.truth.Truth.assertThat
 import com.nishant.customview.models.TransactionItem
@@ -94,5 +94,18 @@ class UtilsTest {
 
         val result = sortedData(input)
         assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun testGetDayOfWeek() {
+        assertThat(getDay(2021, 8, 25)).isEqualTo("Sat")
+        assertThat(getDay(2003, 8, 30)).isEqualTo("Tue")
+    }
+
+    @Test
+    fun testGetLastDay() {
+        assertThat(getLastDate(8, 2021)).isEqualTo(30)
+        assertThat(getLastDate(4, 2003)).isEqualTo(31)
+        assertThat(getLastDate(1, 2020)).isEqualTo(29)
     }
 }

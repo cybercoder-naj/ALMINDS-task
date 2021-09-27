@@ -8,7 +8,7 @@ import com.nishant.customview.R
 import com.nishant.customview.models.PaymentMethodItem
 import com.nishant.customview.models.TransactionItem
 import com.nishant.customview.models.TransferIconData
-import com.nishant.customview.sortedData
+import com.nishant.customview.utils.sortedData
 
 class TransactionsViewModel : ViewModel() {
 
@@ -69,5 +69,13 @@ class TransactionsViewModel : ViewModel() {
             )
         )
         return MutableLiveData(finalList)
+    }
+
+    fun selectPaymentMethod(paymentMethodItem: PaymentMethodItem) {
+        _paymentMethods.value = _paymentMethods.value?.onEach {
+            it.checked = false
+            if (it == paymentMethodItem)
+                it.checked = true
+        }
     }
 }

@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatButton
 import com.nishant.customview.R
-import com.nishant.customview.dp
+import com.nishant.customview.utils.dp
 
 class BottomSheetButton @JvmOverloads constructor(
     context: Context,
@@ -16,7 +16,10 @@ class BottomSheetButton @JvmOverloads constructor(
 ) : AppCompatButton(context, attrs, defStyleAttr) {
 
     init {
-        text = "Continue"
+        with(context.obtainStyledAttributes(attrs, R.styleable.BottomSheetButton)) {
+            text = getString(R.styleable.BottomSheetButton_sheetText)
+            recycle()
+        }
         setBackgroundResource(R.drawable.bg_button)
         textAlignment = TEXT_ALIGNMENT_CENTER
         setPadding(0, 12.dp.toInt(), 0, 12.dp.toInt())

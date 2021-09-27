@@ -65,12 +65,8 @@ class TransactionsFragmentTest {
 
     @Test
     fun testPaymentMethodModalOpensOnClick() {
-        onView(withId(R.id.transactionsRecyclerView))
+        onView(withId(R.id.transferRecyclerView))
             .perform(actionOnItemAtPosition<TransferViewHolder>(1, click()))
-        Thread.sleep(1000)
-
-        onView(withText("Pay")).check(matches(isDisplayed()))
-        onView(withText("Pay")).perform(click())
         Thread.sleep(1000)
 
         onView(withText("Choose Payment Method")).check(matches(isDisplayed()))

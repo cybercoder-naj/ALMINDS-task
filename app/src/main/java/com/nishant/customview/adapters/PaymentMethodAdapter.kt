@@ -10,7 +10,7 @@ import com.nishant.customview.databinding.LayoutPaymentMethodBinding
 import com.nishant.customview.models.PaymentMethodItem
 
 class PaymentMethodAdapter : RecyclerView.Adapter<PaymentMethodAdapter.PaymentMethodViewHolder>() {
-    class PaymentMethodViewHolder(
+    inner class PaymentMethodViewHolder(
         private val binding: LayoutPaymentMethodBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
@@ -26,6 +26,10 @@ class PaymentMethodAdapter : RecyclerView.Adapter<PaymentMethodAdapter.PaymentMe
                 else
                     Color.parseColor("#243257")
             }
+
+            itemView.setOnClickListener {
+                onItemClick(paymentMethod)
+            }
         }
     }
 
@@ -34,6 +38,8 @@ class PaymentMethodAdapter : RecyclerView.Adapter<PaymentMethodAdapter.PaymentMe
             field = value
             notifyDataSetChanged()
         }
+
+    var onItemClick: (PaymentMethodItem) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PaymentMethodViewHolder(DataBindingUtil.inflate(

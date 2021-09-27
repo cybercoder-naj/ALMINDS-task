@@ -12,10 +12,10 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.nishant.customview.R
-import com.nishant.customview.dp
-import com.nishant.customview.getCircledBitmap
 import com.nishant.customview.models.TransactionItem
-import com.nishant.customview.sp
+import com.nishant.customview.utils.dp
+import com.nishant.customview.utils.getCircledBitmap
+import com.nishant.customview.utils.sp
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
@@ -393,11 +393,24 @@ class CreditTypeView @JvmOverloads constructor(
     private fun writeDate(text: String, canvas: Canvas) {
         dateTextPaint.getTextBounds(text, 0, text.length, dateBounds)
 
-        canvas.rotate(-90f, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp)
+        canvas.rotate(
+            -90f,
+            (width / 8f - offsetSmall + dateBounds.height()) / 2,
+            height - offset - 8.dp
+        )
         canvas.translate(10.dp, 2.dp)
-        canvas.drawText(text, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp, dateTextPaint)
+        canvas.drawText(
+            text,
+            (width / 8f - offsetSmall + dateBounds.height()) / 2,
+            height - offset - 8.dp,
+            dateTextPaint
+        )
         canvas.translate(-(10.dp), (-2).dp)
-        canvas.rotate(90f, (width / 8f - offsetSmall + dateBounds.height()) / 2, height - offset - 8.dp)
+        canvas.rotate(
+            90f,
+            (width / 8f - offsetSmall + dateBounds.height()) / 2,
+            height - offset - 8.dp
+        )
     }
 
     private fun drawPart1(canvas: Canvas) {

@@ -5,9 +5,9 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.Paint.Style
 import android.util.AttributeSet
-import com.nishant.customview.dp
 import android.view.View
-import com.nishant.customview.sp
+import com.nishant.customview.utils.dp
+import com.nishant.customview.utils.sp
 import kotlin.math.min
 
 class AccountPill @JvmOverloads constructor(

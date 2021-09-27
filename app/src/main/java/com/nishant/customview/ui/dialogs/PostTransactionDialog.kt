@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.nishant.customview.databinding.DialogPostTransactionBinding
-import com.nishant.customview.toast
+import com.nishant.customview.utils.toast
 
 class PostTransactionDialog : RoundedBottomSheetFragment() {
     private lateinit var binding: DialogPostTransactionBinding

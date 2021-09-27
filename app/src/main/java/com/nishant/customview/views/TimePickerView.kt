@@ -9,9 +9,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
-import com.nishant.customview.dp
-import com.nishant.customview.setAlpha
-import com.nishant.customview.sp
+import com.nishant.customview.utils.dp
+import com.nishant.customview.utils.setAlpha
+import com.nishant.customview.utils.sp
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.min
@@ -40,7 +41,7 @@ class TimePickerView @JvmOverloads constructor(
 
     private val hours = IntArray(24) { it }
     private val minutes = IntArray(60) { it }
-    private val meridian = arrayOf("PM", "AM")
+    private val meridian = arrayOf("AM", "PM")
 
     private var currentHr = 0
     private var currentMin = 0
@@ -58,6 +59,7 @@ class TimePickerView @JvmOverloads constructor(
         }
     private var touchY = 0f
     private var threshold = 0f
+    private var touchChange = 0
 
     private val textBounds = Rect()
 
@@ -83,6 +85,14 @@ class TimePickerView @JvmOverloads constructor(
             field = value
             postInvalidate()
         }
+
+    init {
+        Calendar.getInstance().apply {
+            currentHr = this[Calendar.HOUR]
+            currentMin = this[Calendar.MINUTE]
+            currentMeri = this[Calendar.AM_PM]
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val desiredWidth = 400.dp.toInt()

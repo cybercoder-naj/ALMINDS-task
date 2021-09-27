@@ -24,4 +24,8 @@
         <attr name="methodCr" format="string" />
         <attr name="amountCr" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="BottomSheetButton">
+        <attr name="sheetText" format="string" />
+    </declare-styleable>
 </resources>

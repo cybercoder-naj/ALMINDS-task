@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="item"
             type="com.nishant.customview.models.PaymentMethodItem" />
@@ -23,9 +25,9 @@
         android:layout_height="wrap_content"
         android:background="@{backgroundColor}"
         android:paddingStart="32dp"
-        android:paddingTop="24dp"
+        android:paddingTop="12dp"
         android:paddingEnd="32dp"
-        android:paddingBottom="24dp"
+        android:paddingBottom="12dp"
         tools:background="#EDF5FF">
 
         <TextView
@@ -34,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="@{item.name}"
             android:textColor="@{nameColor}"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="UPI"
@@ -64,6 +66,16 @@
             app:layout_constraintStart_toStartOf="@id/tvMethod"
             app:layout_constraintTop_toBottomOf="@id/tvMethod"
             tools:text="Available 24x7, for transfer upto 50,000" />
+ 
+        <ImageView
+            android:id="@+id/imageTick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tick"
+            android:visibility="@{item.checked ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvMethod" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

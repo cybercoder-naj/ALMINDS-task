@@ -43,12 +43,29 @@
             android:id="@+id/paymentMethodRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="2dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tvPaymentMethod"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod"
             app:paymentMethodItems="@{model.paymentMethods}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_date_time_btn"
+            app:backgroundTint="@null"
+            android:drawableLeft="@drawable/ic_date_time"
+            android:text="@string/select_date_time"
+            android:textAllCaps="false"
+            android:textColor="#1B79E6"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodRecyclerView" />
 
         <com.nishant.customview.views.BottomSheetButton
             android:layout_width="0dp"
@@ -58,7 +75,8 @@
             android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paymentMethodRecyclerView" />
+            app:layout_constraintTop_toBottomOf="@id/btnDateTime"
+            app:sheetText="Confirm" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

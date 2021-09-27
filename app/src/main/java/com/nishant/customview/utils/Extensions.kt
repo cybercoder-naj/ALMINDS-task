@@ -1,9 +1,10 @@
-package com.nishant.customview
+package com.nishant.customview.utils
 
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
@@ -34,6 +35,9 @@ fun Int.setAlpha(alpha: Int): Int {
     val correctedAlpha = if (alpha < 0) 0 else if (alpha > 255) 255 else alpha
     return Color.argb(correctedAlpha, Color.red(this), Color.blue(this), Color.green(this))
 }
+
+fun MotionEvent.clickedIn(area: RectF) =
+    (x in area.left..area.right && y in area.top..area.bottom)
 
 val Float.dp
     get() = TypedValue.applyDimension(

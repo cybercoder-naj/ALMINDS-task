@@ -7,9 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.R
-import com.nishant.customview.dp
-import com.nishant.customview.getCircledBitmap
-import com.nishant.customview.sp
+import com.nishant.customview.utils.dp
+import com.nishant.customview.utils.getCircledBitmap
+import com.nishant.customview.utils.sp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -176,6 +176,6 @@ class BankIcon @JvmOverloads constructor(
         }
     }
 
-    private val Float.deg : Float
+    private val Float.deg: Float
         get() = this * PI.toFloat() / 180f
 }

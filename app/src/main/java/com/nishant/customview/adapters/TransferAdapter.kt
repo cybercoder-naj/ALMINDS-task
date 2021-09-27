@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nishant.customview.R
 import com.nishant.customview.ui.dialogs.SavingsAccountDialog
 import com.nishant.customview.models.TransferIconData
+import com.nishant.customview.ui.dialogs.PaymentMethodDialog
 import com.nishant.customview.views.TransferIcon
 
 class TransferAdapter : RecyclerView.Adapter<TransferAdapter.TransferViewHolder>() {
@@ -21,11 +22,22 @@ class TransferAdapter : RecyclerView.Adapter<TransferAdapter.TransferViewHolder>
                 iconRes = transferIconData.icon
             }
 
-            if (transferIconData.icon == R.drawable.ic_bank) {
-                itemView.setOnClickListener {
-                    fManager?.let { manager ->
-                        SavingsAccountDialog().apply {
-                            show(manager, tag)
+            when (transferIconData.icon) {
+                R.drawable.ic_bank -> {
+                    itemView.setOnClickListener {
+                        fManager?.let { manager ->
+                            SavingsAccountDialog().apply {
+                                show(manager, tag)
+                            }
+                        }
+                    }
+                }
+                R.drawable.ic_user -> {
+                    itemView.setOnClickListener {
+                        fManager?.let { manager ->
+                            PaymentMethodDialog().apply {
+                                show(manager, tag)
+                            }
                         }
                     }
                 }

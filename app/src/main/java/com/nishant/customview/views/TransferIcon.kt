@@ -9,8 +9,8 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.nishant.customview.R
-import com.nishant.customview.dp
-import com.nishant.customview.sp
+import com.nishant.customview.utils.dp
+import com.nishant.customview.utils.sp
 import kotlin.math.min
 
 class TransferIcon @JvmOverloads constructor(

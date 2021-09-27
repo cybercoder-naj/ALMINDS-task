@@ -55,7 +55,11 @@ class PaymentMethodDialog : RoundedBottomSheetFragment() {
         binding.paymentMethodRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
-            adapter = PaymentMethodAdapter()
+            adapter = PaymentMethodAdapter().apply {
+                onItemClick = {
+                    viewModel.selectPaymentMethod(it)
+                }
+            }
         }
     }
 }
