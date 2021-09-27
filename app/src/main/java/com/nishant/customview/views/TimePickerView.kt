@@ -1,5 +1,6 @@
 package com.nishant.customview.views
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.animation.addListener
 import com.nishant.customview.utils.dp
 import com.nishant.customview.utils.setAlpha
 import com.nishant.customview.utils.sp
@@ -35,6 +37,7 @@ class TimePickerView @JvmOverloads constructor(
         private const val PERIPHERY = 7
     }
 
+    private var lastChange = 0
     private var firstDividerX = 0f
     private var secondDividerX = 0f
     private var paddingX = 0f
@@ -59,7 +62,6 @@ class TimePickerView @JvmOverloads constructor(
         }
     private var touchY = 0f
     private var threshold = 0f
-    private var touchChange = 0
 
     private val textBounds = Rect()
 
@@ -95,7 +97,7 @@ class TimePickerView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 400.dp.toInt()
+        val desiredWidth = 420.dp.toInt()
         val desiredHeight = 200.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
@@ -129,7 +131,7 @@ class TimePickerView @JvmOverloads constructor(
         textPaint.color = primaryColor
 
         textPaint.getTextBounds("00", 0, 2, textBounds)
-        threshold = textBounds.height() + 32.dp
+        threshold = textBounds.height() + 36.dp
 
         if (showGradient)
             drawDividersGradient(canvas)
@@ -154,6 +156,7 @@ class TimePickerView @JvmOverloads constructor(
 
                 val actualX = hrX - textBounds.width()
                 var actualY = hrY - (textBounds.height() + 36.dp) * i
+
                 if (touchEvent == DOWN_HR)
                     actualY += touchDy
 
@@ -182,6 +185,7 @@ class TimePickerView @JvmOverloads constructor(
                 var actualY = hrY + (textBounds.height() + 36.dp) * i
                 if (touchEvent == DOWN_HR)
                     actualY += touchDy
+
 
                 val alpha = 255 - floor(abs(actualY - hrY) / height * 765).toInt()
                 textPaint.color = textPaint.color.setAlpha(alpha)
@@ -364,39 +368,61 @@ class TimePickerView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_MOVE -> {
                 touchDy = event.y - touchY
+                changeValue(event)
                 postInvalidate()
                 return true
             }
             MotionEvent.ACTION_UP -> {
-                val change = (touchDy / threshold).toInt()
-                when (touchEvent) {
-                    DOWN_HR -> {
-                        currentHr -= change
-                        if (currentHr < 0)
-                            currentHr += hours.size
-                        if (currentHr >= hours.size)
-                            currentHr -= hours.size
-                    }
-                    DOWN_MIN -> {
-                        currentMin -= change
-                        if (currentMin < 0)
-                            currentMin += minutes.size
-                        if (currentMin >= minutes.size)
-                            currentMin -= minutes.size
-                    }
-                    DOWN_MERI -> {
-                        currentMeri -= change
-                        if (currentMeri < 0)
-                            currentMeri = 0
-                        if (currentMeri > 1)
-                            currentMeri = 1
-                    }
+                if (touchEvent == DOWN_MERI) {
+                    currentMeri -= (touchDy / threshold).toInt()
+                    if (currentMeri < 0)
+                        currentMeri = 0
+                    if (currentMeri > 1)
+                        currentMeri = 1
                 }
-                touchDy = 0f
-                touchEvent = UP
-                postInvalidate()
+                with(ValueAnimator.ofFloat(touchDy, 0f)) {
+                    duration = 500
+                    addUpdateListener {
+                        touchDy = it.animatedValue as Float
+                        postInvalidate()
+                    }
+                    addListener(onEnd = {
+                        touchEvent = UP
+                        lastChange = 0
+                    })
+                    start()
+                }
             }
         }
         return value
+    }
+
+    private fun changeValue(event: MotionEvent) {
+        val change = (touchDy / threshold).toInt()
+        when (touchEvent) {
+            DOWN_HR -> {
+                if (change != lastChange) {
+                    touchY = event.y
+                    touchDy = 0f
+                    currentHr -= change
+                    if (currentHr < 0)
+                        currentHr += hours.size
+                    if (currentHr >= hours.size)
+                        currentHr -= hours.size
+                }
+            }
+            DOWN_MIN -> {
+                if (change != lastChange) {
+                    touchY = event.y
+                    touchDy = 0f
+                    currentMin -= change
+                    if (currentMin < 0)
+                        currentMin += minutes.size
+                    if (currentMin >= minutes.size)
+                        currentMin -= minutes.size
+                }
+            }
+        }
+        lastChange = change
     }
 }
