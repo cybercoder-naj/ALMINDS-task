@@ -1,11 +1,14 @@
 package com.nishant.customview.views
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.animation.addListener
 import com.nishant.customview.utils.*
 import java.util.*
 import kotlin.math.abs
@@ -21,6 +24,8 @@ class DatePickerView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     companion object {
+        private const val TAG = "DatePickerView"
+
         private const val UP = 0
         private const val DOWN_LEFT_ARROW = 1
         private const val DOWN_RIGHT_ARROW = 2
@@ -29,6 +34,7 @@ class DatePickerView @JvmOverloads constructor(
         private const val PERIPHERY = 7
     }
 
+    private var lastChange = 0
     private val dateBounds = Rect()
     private val linePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.STROKE
@@ -85,9 +91,13 @@ class DatePickerView @JvmOverloads constructor(
 
     private var touchEvent = UP
     private var touchDx = 0f
+        set(value) {
+            field = value
+            Log.d(TAG, "touchDx: $field")
+        }
     private var touchX = 0f
 
-    private val threshold = 84.dp
+    private val threshold = 92.dp
 
     private var dateSelectRange = 0.0f..0.0f
 
@@ -166,6 +176,17 @@ class DatePickerView @JvmOverloads constructor(
         paddingX = width * .05f
         firstDividerX = (width - 2 * paddingX) / 3f + paddingX
         secondDividerX = (width - 2 * paddingX) * 2f / 3f + paddingX
+
+        // TODO DELTE
+        canvas.drawLines(floatArrayOf(
+            width / 2f - threshold / 2f, 0f,
+            width / 2f - threshold / 2f, height.toFloat(),
+            width / 2f + threshold / 2f, 0f,
+            width / 2f + threshold / 2f, height.toFloat()
+        ), Paint().apply {
+            style = Style.STROKE
+            strokeWidth = 2.dp
+        })
 
         drawYearWithNavigateCircles(canvas)
         if (currentMon != -1)
@@ -386,12 +407,20 @@ class DatePickerView @JvmOverloads constructor(
     ) =
         if (position in range) 18.sp else if (dx * 18.sp + 4.sp > 18.sp) 18.sp else dx * 18.sp + 4.sp
 
-    private fun getDateSelectColor(position: Float, range: ClosedFloatingPointRange<Float>, dx: Float) =
+    private fun getDateSelectColor(
+        position: Float,
+        range: ClosedFloatingPointRange<Float>,
+        dx: Float
+    ) =
         if (position in range) Color.WHITE else Color.parseColor("#243257").apply {
             setAlpha((dx * 255).toInt())
         }
 
-    private fun getDateSelectColor2(position: Float, range: ClosedFloatingPointRange<Float>, dx: Float) =
+    private fun getDateSelectColor2(
+        position: Float,
+        range: ClosedFloatingPointRange<Float>,
+        dx: Float
+    ) =
         if (position in range) Color.WHITE else Color.parseColor("#1B79E6").apply {
             setAlpha((dx * 255).toInt())
         }
@@ -467,7 +496,17 @@ class DatePickerView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_MOVE -> {
                 touchDx = event.x - touchX
-                postInvalidate()
+                val change = (touchDx / threshold).toInt()
+                if (change != lastChange) {
+                    touchX = event.x
+                    currentDate -= change
+                    if (currentDate < 1)
+                        currentDate = 1
+                    if (currentDate > getLastDate(currentMon, currentYr))
+                        currentDate = getLastDate(currentMon, currentYr)
+                }
+                lastChange = change
+                invalidate()
                 return true
             }
             MotionEvent.ACTION_UP -> {
@@ -475,18 +514,21 @@ class DatePickerView @JvmOverloads constructor(
                     DOWN_LEFT_ARROW -> currentYr--
                     DOWN_RIGHT_ARROW -> currentYr++
                     DOWN_DATE_SELECT -> {
-                        val change = (touchDx / threshold).toInt()
-                        currentDate -= change
-                        if (currentDate < 1)
-                            currentDate = 1
-                        if (currentDate > getLastDate(currentMon, currentYr))
-                            currentDate = getLastDate(currentMon, currentYr)
+
                     }
                 }
-                touchEvent = UP
-                touchX = 0f
-                touchDx = 0f
-                postInvalidate()
+                with(ValueAnimator.ofFloat(touchDx, 0f)) {
+                    duration = 500
+                    addUpdateListener {
+                        touchDx = it.animatedValue as Float
+                        postInvalidate()
+                    }
+                    addListener(onEnd = {
+                        touchEvent = UP
+                        lastChange = 0
+                    })
+                    start()
+                }
             }
         }
 
