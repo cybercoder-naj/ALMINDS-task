@@ -65,10 +65,10 @@ operator fun Pair<Int, Int>.invoke(callback: (Int) -> Unit) {
     }
 }
 
-fun Canvas.drawDrawable(res: Resources, @DrawableRes id: Int, dst: RectF) {
+fun Canvas.drawDrawable(res: Resources, @DrawableRes id: Int, dst: RectF, paint: Paint? = null) {
     ResourcesCompat.getDrawable(res, id, null)
         ?.toBitmap()?.let {
-            drawBitmap(it, null, dst, null)
+            drawBitmap(it, null, dst, paint)
         }
 }
 

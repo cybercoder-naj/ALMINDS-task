@@ -337,12 +337,13 @@ class HomepageCards @JvmOverloads constructor(
     private val headingTextBounds = Rect()
     private val buttonTextBounds = Rect()
     private val transferButtonRect = RectF()
+    private val diagonalArrowRect = RectF()
 
     private val paddingX = 24.dp
     private val cardGap = 12.dp
     private val expandedCardSizeX = 256.dp
     private val collapsedCardSizeX = 64.dp
-    private val cardSizeY = 280.dp
+    private val cardSizeY = 300.dp
     private val bitmapSize = 42.dp
     private val cardPadding = 24.dp
 
@@ -378,6 +379,15 @@ class HomepageCards @JvmOverloads constructor(
         when (it) {
             SAVINGS -> 255
             else -> 0
+        }
+    }
+    @DrawableRes
+    private val requestArrow = Array(3) {
+        when (it) {
+            SAVINGS -> R.drawable.ic_diagonal_arrow_blue
+            PAY_LATER -> R.drawable.ic_diagonal_arrow_pink
+            CRYPTO -> R.drawable.ic_diagonal_arrow_green
+            else -> R.drawable.ic_diagonal_arrow_blue
         }
     }
 
@@ -445,6 +455,7 @@ class HomepageCards @JvmOverloads constructor(
         style = Style.FILL
         color = Color.WHITE
     }
+    private val alphaPaint = Paint()
 
     init {
         expandedCard = SAVINGS
@@ -452,7 +463,7 @@ class HomepageCards @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val desiredWidth = 420.dp.toInt()
-        val desiredHeight = 300.dp.toInt()
+        val desiredHeight = 316.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -553,8 +564,43 @@ class HomepageCards @JvmOverloads constructor(
                     alpha = alphaProps[card]
                 }
             )
+            canvas.drawText(
+                "Transfer",
+                transferButtonRect.centerX() - buttonTextBounds.width() / 2f,
+                transferButtonRect.bottom + 8.dp + buttonTextBounds.height(),
+                buttonTextPaint.apply {
+                    alpha = alphaProps[card]
+                }
+            )
+            diagonalArrowRect.apply {
+                left = transferButtonRect.centerX() - 18.dp
+                top = transferButtonRect.centerY() - 18.dp
+                right = left + 36.dp
+                bottom = top + 36.dp
+            }
+            canvas.drawDrawable(
+                resources,
+                R.drawable.ic_diagonal_arrow_black,
+                diagonalArrowRect,
+                alphaPaint.apply {
+                    alpha = alphaProps[card]
+                })
             transferButtonRect.apply {
-                offsetTo(right + 24.dp, top)
+                offsetTo(right + 16.dp, top)
+            }
+            canvas.drawText(
+                "Request",
+                transferButtonRect.centerX() - buttonTextBounds.width() / 2f,
+                transferButtonRect.bottom + 8.dp + buttonTextBounds.height(),
+                buttonTextPaint.apply {
+                    alpha = alphaProps[card]
+                }
+            )
+            diagonalArrowRect.apply {
+                left = transferButtonRect.centerX() - 18.dp
+                top = transferButtonRect.centerY() - 18.dp
+                right = left + 36.dp
+                bottom = top + 36.dp
             }
             canvas.drawCircle(
                 transferButtonRect.centerX(),
@@ -562,6 +608,13 @@ class HomepageCards @JvmOverloads constructor(
                 transferButtonRect.height() / 2f,
                 requestButtonPaint
             )
+            canvas.drawDrawable(
+                resources,
+                requestArrow[card],
+                diagonalArrowRect,
+                alphaPaint.apply {
+                    alpha = alphaProps[card]
+                })
         }
     }
 
