@@ -1,5 +1,6 @@
 package com.nishant.customview.views
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.*
@@ -8,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.core.animation.addListener
 import com.nishant.customview.R
 import com.nishant.customview.utils.*
 import kotlin.math.min
@@ -350,9 +352,6 @@ class HomepageCards @JvmOverloads constructor(
     private var expandedEyeRect = Pair(-1, RectF())
     private var expandedTransferRect = Pair(-1, RectF())
     private var expandedRequestRect = Pair(-1, RectF())
-
-    private val transferRippleEffect = Quadruple(0f, 0f, 0f, 0f)
-    private val requestRippleEffect = Quadruple(0f, 0f, 0f, 0f)
 
     private val paddingX = 24.dp
     private val cardGap = 12.dp
@@ -760,7 +759,6 @@ class HomepageCards @JvmOverloads constructor(
                 }
                 if (expandedEyeRect.first == expandedCard && event.clickedIn(expandedEyeRect.second)) {
                     showAmount[expandedCard] = !showAmount[expandedCard]
-                    resetCardBounds()
                     invalidate()
                     return true
                 }
@@ -784,7 +782,7 @@ class HomepageCards @JvmOverloads constructor(
         return value
     }
 
-    private fun resetCardBounds() {
+    override fun invalidate() {
         savingsCardBounds.apply {
             top = 0f
             bottom = cardSizeY
@@ -797,18 +795,17 @@ class HomepageCards @JvmOverloads constructor(
             top = 0f
             bottom = cardSizeY
         }
+        super.invalidate()
     }
 
     private fun RectF.animateHorizontalSizeTo(newLeft: Float, newRight: Float) {
         if (requireAnim) {
             (left to newLeft) {
                 left = it
-                resetCardBounds()
                 invalidate()
             }
             (right to newRight) {
                 right = it
-                resetCardBounds()
                 invalidate()
             }
         } else {
