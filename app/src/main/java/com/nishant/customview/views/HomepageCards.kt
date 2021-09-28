@@ -335,6 +335,8 @@ class HomepageCards @JvmOverloads constructor(
     private val cryptoCardBounds = RectF()
     private val bitmapRect = RectF()
     private val headingTextBounds = Rect()
+    private val buttonTextBounds = Rect()
+    private val transferButtonRect = RectF()
 
     private val paddingX = 24.dp
     private val cardGap = 12.dp
@@ -430,6 +432,19 @@ class HomepageCards @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
         textSize = 18.sp
     }
+    private val buttonTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL_AND_STROKE
+        color = Color.WHITE
+        textSize = 16.sp
+    }
+    private val transferButtonPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL
+        color = Color.parseColor("#FCD844")
+    }
+    private val requestButtonPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL
+        color = Color.WHITE
+    }
 
     init {
         expandedCard = SAVINGS
@@ -484,7 +499,6 @@ class HomepageCards @JvmOverloads constructor(
                 CRYPTO -> Color.parseColor("#37D8CF")
                 else -> Color.BLACK
             }
-            val cardWidth = cardBounds.width()
             drawCard(canvas, cardBounds, cardPaint)
             bitmapRect.apply {
                 left = bitmapPosition[card].x
@@ -523,6 +537,30 @@ class HomepageCards @JvmOverloads constructor(
                 cardBounds.right,
                 bitmapRect,
                 card
+            )
+            buttonTextPaint.getTextBounds("Transfer", 0, 8, buttonTextBounds)
+            transferButtonRect.apply {
+                left = bitmapRect.left
+                top = cardSizeY - buttonTextBounds.height() - 68.dp
+                right = left + 100.dp
+                bottom = top + 56.dp
+            }
+            canvas.drawRoundRect(
+                transferButtonRect,
+                36.dp,
+                36.dp,
+                transferButtonPaint.apply {
+                    alpha = alphaProps[card]
+                }
+            )
+            transferButtonRect.apply {
+                offsetTo(right + 24.dp, top)
+            }
+            canvas.drawCircle(
+                transferButtonRect.centerX(),
+                transferButtonRect.centerY(),
+                transferButtonRect.height() / 2f,
+                requestButtonPaint
             )
         }
     }
@@ -642,7 +680,7 @@ class HomepageCards @JvmOverloads constructor(
         bgArrowPaint.color = color
         val radius = bounds.width() * .55f
         val originalLeft = bounds.left
-        bounds.offsetTo(cardEnd - cardPadding * 2f - radius, bounds.top)
+        bounds.offsetTo(cardEnd - cardPadding - 36.dp, bounds.top)
         val cx = bounds.centerX()
         val cy = bounds.centerY()
         bounds.left = originalLeft
