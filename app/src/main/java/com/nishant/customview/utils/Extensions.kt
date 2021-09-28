@@ -1,5 +1,6 @@
 package com.nishant.customview.utils
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
@@ -7,6 +8,9 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 
 fun Bitmap.getCircledBitmap(): Bitmap {
@@ -37,7 +41,24 @@ fun Int.setAlpha(alpha: Int): Int {
 }
 
 fun MotionEvent.clickedIn(area: RectF) =
-    (x in area.left..area.right && y in area.top..area.bottom)
+    area.contains(x, y)
+
+operator fun Pair<Float, Float>.invoke(callback: (Float) -> Unit) {
+    with(ValueAnimator.ofFloat(first, second)) {
+        duration = 500
+        addUpdateListener {
+            callback(it.animatedValue as Float)
+        }
+        start()
+    }
+}
+
+fun Canvas.drawDrawable(res: Resources, @DrawableRes id: Int, dst: RectF) {
+    ResourcesCompat.getDrawable(res, id, null)
+        ?.toBitmap()?.let {
+            drawBitmap(it, null, dst, null)
+        }
+}
 
 val Float.dp
     get() = TypedValue.applyDimension(

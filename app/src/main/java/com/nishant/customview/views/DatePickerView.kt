@@ -97,7 +97,7 @@ class DatePickerView @JvmOverloads constructor(
         }
     private var touchX = 0f
 
-    private val threshold = 92.dp
+    private val threshold = 48.dp
 
     private var dateSelectRange = 0.0f..0.0f
 
@@ -142,6 +142,10 @@ class DatePickerView @JvmOverloads constructor(
             currentMon = this[Calendar.MONTH]
             currentDate = this[Calendar.DATE]
         }
+
+        Log.d(TAG, "threshold: $threshold")
+        Log.d(TAG, "window: ${84.dp}")
+        Log.d(TAG, "gap: ${92.dp}")
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -328,7 +332,7 @@ class DatePickerView @JvmOverloads constructor(
 
             val day = getDay(currentYr, currentMon, index)
             datePaint.getTextBounds(day, 0, day.length, dateBounds)
-            var actualX = midX - 92.dp * i
+            var actualX = midX - threshold * 2 * i
             if (touchEvent == DOWN_DATE_SELECT)
                 actualX += touchDx
             val dx = 1 - abs(actualX - midX) / width
@@ -360,7 +364,7 @@ class DatePickerView @JvmOverloads constructor(
 
             val day = getDay(currentYr, currentMon, index)
             datePaint.getTextBounds(day, 0, day.length, dateBounds)
-            var actualX = midX + 92.dp * i
+            var actualX = midX + threshold * 2 * i
             if (touchEvent == DOWN_DATE_SELECT)
                 actualX += touchDx
             val dx = 1 - abs(actualX - midX) / width
@@ -484,17 +488,18 @@ class DatePickerView @JvmOverloads constructor(
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
-                touchDx = event.x - touchX
                 val change = (touchDx / threshold).toInt()
-                if (change != lastChange) {
-                    touchX = event.x
+                if (abs(change) > lastChange) {
+                    lastChange = abs(change)
+                    touchDx = -threshold
+                    touchX = event.x - touchDx
                     currentDate -= change
                     if (currentDate < 1)
                         currentDate = 1
                     if (currentDate > getLastDate(currentMon, currentYr))
                         currentDate = getLastDate(currentMon, currentYr)
-                }
-                lastChange = change
+                } else
+                    touchDx = event.x - touchX
                 invalidate()
                 return true
             }
