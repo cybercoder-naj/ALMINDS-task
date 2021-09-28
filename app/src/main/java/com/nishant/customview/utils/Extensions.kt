@@ -72,6 +72,14 @@ fun Canvas.drawDrawable(res: Resources, @DrawableRes id: Int, dst: RectF, paint:
         }
 }
 
+operator fun String.times(n: Int): String {
+    val sb = StringBuilder()
+    repeat(n) {
+        sb.append(this)
+    }
+    return sb.toString()
+}
+
 val Float.dp
     get() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,

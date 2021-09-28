@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import com.nishant.customview.R
 import com.nishant.customview.utils.*
 import kotlin.math.min
+import kotlin.math.round
 
 class HomepageCards @JvmOverloads constructor(
     context: Context,
@@ -100,11 +101,11 @@ class HomepageCards @JvmOverloads constructor(
                             headTextTranslation[SAVINGS].y = it
                             invalidate()
                         }
-                        (headTextTranslation[PAY_LATER].x to 42.dp) {
+                        (headTextTranslation[PAY_LATER].x to 64.dp) {
                             headTextTranslation[PAY_LATER].x = it
                             invalidate()
                         }
-                        (headTextTranslation[PAY_LATER].y to 20.dp) {
+                        (headTextTranslation[PAY_LATER].y to 56.dp) {
                             headTextTranslation[PAY_LATER].y = it
                             invalidate()
                         }
@@ -297,11 +298,11 @@ class HomepageCards @JvmOverloads constructor(
                             headTextTranslation[SAVINGS].y = it
                             invalidate()
                         }
-                        (headTextTranslation[PAY_LATER].x to 42.dp) {
+                        (headTextTranslation[PAY_LATER].x to 64.dp) {
                             headTextTranslation[PAY_LATER].x = it
                             invalidate()
                         }
-                        (headTextTranslation[PAY_LATER].y to 20.dp) {
+                        (headTextTranslation[PAY_LATER].y to 56.dp) {
                             headTextTranslation[PAY_LATER].y = it
                             invalidate()
                         }
@@ -338,11 +339,13 @@ class HomepageCards @JvmOverloads constructor(
     private val buttonTextBounds = Rect()
     private val transferButtonRect = RectF()
     private val diagonalArrowRect = RectF()
+    private val eyeRect = RectF()
+    private val amountTextBounds = Rect()
 
     private val paddingX = 24.dp
     private val cardGap = 12.dp
     private val expandedCardSizeX = 256.dp
-    private val collapsedCardSizeX = 64.dp
+    private val collapsedCardSizeX = 72.dp
     private val cardSizeY = 300.dp
     private val bitmapSize = 42.dp
     private val cardPadding = 24.dp
@@ -370,7 +373,7 @@ class HomepageCards @JvmOverloads constructor(
     private val headTextTranslation = Array(3) {
         when (it) {
             SAVINGS -> PointF(0f, 0f)
-            PAY_LATER -> PointF(42.dp, 20.dp)
+            PAY_LATER -> PointF(64.dp, 56.dp)
             CRYPTO -> PointF(64.dp, 48.dp)
             else -> PointF()
         }
@@ -381,6 +384,7 @@ class HomepageCards @JvmOverloads constructor(
             else -> 0
         }
     }
+
     @DrawableRes
     private val requestArrow = Array(3) {
         when (it) {
@@ -403,7 +407,7 @@ class HomepageCards @JvmOverloads constructor(
     private val heading = Array(3) {
         when (it) {
             SAVINGS -> "Savings Account"
-            PAY_LATER -> "Pay Later"
+            PAY_LATER -> "Pay Later Account"
             CRYPTO -> "Crypto Account"
             else -> ""
         }
@@ -455,10 +459,35 @@ class HomepageCards @JvmOverloads constructor(
         style = Style.FILL
         color = Color.WHITE
     }
+    private val amountTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL_AND_STROKE
+        color = Color.WHITE
+        typeface = Typeface.DEFAULT_BOLD
+        textSize = 24.sp
+    }
+    private val eyeCrossPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.STROKE
+        color = Color.parseColor("#B7D2F2")
+        strokeWidth = 2.dp
+    }
     private val alphaPaint = Paint()
+
+    var amount: FloatArray = FloatArray(3)
+        set(value) {
+            field = value.map { round(it * 100f) / 100f }.toFloatArray()
+            invalidate()
+        }
+    private var showAmount = BooleanArray(3) { true }
+        set(value) {
+            field = value
+            invalidate()
+        }
+    private val _amount: Array<String>
+        get() = amount.map { it.toString() }.toTypedArray()
 
     init {
         expandedCard = SAVINGS
+        amount = floatArrayOf(100.0f, 1432.532f, 913941f)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -490,14 +519,11 @@ class HomepageCards @JvmOverloads constructor(
             return
 
         drawAllCards(canvas)
-
-//        drawSavings(canvas)
-//        drawPayLater(canvas)
-//        drawCrypto(canvas)
     }
 
     private fun drawAllCards(canvas: Canvas) {
         for (card in 0 until 3) {
+            alphaPaint.alpha = alphaProps[card]
             val cardBounds = when (card) {
                 SAVINGS -> savingsCardBounds
                 PAY_LATER -> payLaterCardBounds
@@ -582,9 +608,8 @@ class HomepageCards @JvmOverloads constructor(
                 resources,
                 R.drawable.ic_diagonal_arrow_black,
                 diagonalArrowRect,
-                alphaPaint.apply {
-                    alpha = alphaProps[card]
-                })
+                alphaPaint
+            )
             transferButtonRect.apply {
                 offsetTo(right + 16.dp, top)
             }
@@ -612,21 +637,34 @@ class HomepageCards @JvmOverloads constructor(
                 resources,
                 requestArrow[card],
                 diagonalArrowRect,
-                alphaPaint.apply {
+                alphaPaint
+            )
+            var fractional = _amount[card].substring(_amount[card].indexOf(".") + 1)
+            if (fractional.length == 1)
+                fractional = "0$fractional"
+            val amountText = if (showAmount[card])
+                "${_amount[card].substring(0, _amount[card].indexOf("."))}.$fractional"
+            else
+                "${"*" * _amount[card].indexOf(".")}.$fractional"
+            amountTextPaint.getTextBounds("\u20B9$amountText", 0, 1, amountTextBounds)
+            canvas.drawText(
+                "\u20B9$amountText",
+                bitmapRect.left,
+                (bitmapRect.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top + amountTextBounds.height()) / 2f,
+                amountTextPaint.apply {
                     alpha = alphaProps[card]
-                })
+                }
+            )
+            drawEye(
+                canvas,
+                showAmount[card],
+                cardBounds.right,
+                bitmapRect,
+                amountTextBounds.height().toFloat(),
+                card
+            )
         }
     }
-
-//    private fun drawSavings(canvas: Canvas) {
-//
-//    }
-//    private fun drawPayLater(canvas: Canvas) {
-//
-//    }
-//    private fun drawCrypto(canvas: Canvas) {
-//
-//    }
 
     private fun drawCard(canvas: Canvas, bounds: RectF, paint: Paint) {
         val offsetY = 16.dp
@@ -736,7 +774,7 @@ class HomepageCards @JvmOverloads constructor(
         bounds.offsetTo(cardEnd - cardPadding - 36.dp, bounds.top)
         val cx = bounds.centerX()
         val cy = bounds.centerY()
-        bounds.left = originalLeft
+        bounds.offsetTo(originalLeft, bounds.top)
 
         bgArrowPaint.alpha = alphaProps[index]
         arrowPaint.alpha = alphaProps[index]
@@ -754,5 +792,35 @@ class HomepageCards @JvmOverloads constructor(
                 cx - radius * .1f, cy + radius * .4f
             ), arrowPaint
         )
+    }
+
+    private fun drawEye(
+        canvas: Canvas,
+        cross: Boolean,
+        cardEnd: Float,
+        bounds: RectF,
+        size: Float,
+        index: Int
+    ) {
+        eyeRect.apply {
+            left = cardEnd - cardPadding - 36.dp
+            top = (bounds.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top - amountTextBounds.height()) / 2f
+            right = left + size * 1.8f
+            bottom = top + size * 1.2f
+        }
+
+        canvas.drawDrawable(resources, R.drawable.ic_eye, eyeRect, alphaPaint)
+
+        if (cross) {
+            canvas.drawLine(
+                eyeRect.left,
+                eyeRect.top,
+                eyeRect.right,
+                eyeRect.bottom,
+                eyeCrossPaint.apply {
+                    alpha = alphaProps[index]
+                }
+            )
+        }
     }
 }
