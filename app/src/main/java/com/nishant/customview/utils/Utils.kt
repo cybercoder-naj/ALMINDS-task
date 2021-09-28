@@ -76,3 +76,10 @@ fun getLastDate(@IntRange(from = 0, to = 11) month: Int, year: Int): Int {
     else 28
     return days[month]
 }
+
+data class Quadruple<T>(
+    var first: T,
+    var second: T,
+    var third: T,
+    var fourth: T
+)

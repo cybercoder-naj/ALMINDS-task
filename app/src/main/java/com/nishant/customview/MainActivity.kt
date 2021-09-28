@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.nishant.customview.databinding.ActivityMainBinding
 import com.nishant.customview.ui.fragments.TransactionsFragment
+import com.nishant.customview.utils.toast
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -16,5 +17,9 @@ class MainActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.fragmentContainer, TransactionsFragment())
 //            .commit()
+
+        binding.cards.onClickListeners = { expandedCard, buttonType ->
+            toast("($expandedCard, $buttonType)")
+        }
     }
 }

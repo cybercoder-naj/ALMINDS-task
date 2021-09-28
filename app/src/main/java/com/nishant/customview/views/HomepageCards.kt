@@ -23,9 +23,13 @@ class HomepageCards @JvmOverloads constructor(
     companion object {
         private const val TAG = "HomepageCards"
 
-        private const val SAVINGS = 0
-        private const val PAY_LATER = 1
-        private const val CRYPTO = 2
+        const val SAVINGS = 0
+        const val PAY_LATER = 1
+        const val CRYPTO = 2
+
+        const val TRANSFER = 3
+        const val REQUEST = 4
+        const val ARROW = 5
     }
 
     private var requireAnim = false
@@ -342,9 +346,17 @@ class HomepageCards @JvmOverloads constructor(
     private val eyeRect = RectF()
     private val amountTextBounds = Rect()
 
+    private var expandedArrowRect = Pair(-1, RectF())
+    private var expandedEyeRect = Pair(-1, RectF())
+    private var expandedTransferRect = Pair(-1, RectF())
+    private var expandedRequestRect = Pair(-1, RectF())
+
+    private val transferRippleEffect = Quadruple(0f, 0f, 0f, 0f)
+    private val requestRippleEffect = Quadruple(0f, 0f, 0f, 0f)
+
     private val paddingX = 24.dp
     private val cardGap = 12.dp
-    private val expandedCardSizeX = 256.dp
+    private val expandedCardSizeX = 248.dp
     private val collapsedCardSizeX = 72.dp
     private val cardSizeY = 300.dp
     private val bitmapSize = 42.dp
@@ -477,7 +489,11 @@ class HomepageCards @JvmOverloads constructor(
             field = value.map { round(it * 100f) / 100f }.toFloatArray()
             invalidate()
         }
-    private var showAmount = BooleanArray(3) { true }
+    var onClickListeners: (expandedCard: Int, buttonType: Int) -> Unit = { _, _ ->
+        throw IllegalStateException("On Click Listener has not been initialised")
+    }
+
+    private var showAmount = BooleanArray(3)
         set(value) {
             field = value
             invalidate()
@@ -590,6 +606,10 @@ class HomepageCards @JvmOverloads constructor(
                     alpha = alphaProps[card]
                 }
             )
+
+            if (card == expandedCard)
+                expandedTransferRect =
+                    expandedCard to expandedTransferRect.second.apply { set(transferButtonRect) }
             canvas.drawText(
                 "Transfer",
                 transferButtonRect.centerX() - buttonTextBounds.width() / 2f,
@@ -633,6 +653,9 @@ class HomepageCards @JvmOverloads constructor(
                 transferButtonRect.height() / 2f,
                 requestButtonPaint
             )
+            if (card == expandedCard)
+                expandedRequestRect =
+                    expandedCard to expandedRequestRect.second.apply { set(transferButtonRect) }
             canvas.drawDrawable(
                 resources,
                 requestArrow[card],
@@ -735,24 +758,57 @@ class HomepageCards @JvmOverloads constructor(
                         }
                     }
                 }
+                if (expandedEyeRect.first == expandedCard && event.clickedIn(expandedEyeRect.second)) {
+                    showAmount[expandedCard] = !showAmount[expandedCard]
+                    resetCardBounds()
+                    invalidate()
+                    return true
+                }
+                if (expandedArrowRect.first == expandedCard && event.clickedIn(expandedArrowRect.second)) {
+                    onClickListeners(expandedCard, ARROW)
+                    return true
+                }
+                if (expandedTransferRect.first == expandedCard
+                    && event.clickedIn(expandedTransferRect.second)) {
+                    onClickListeners(expandedCard, TRANSFER)
+                    return true
+                }
+                if (expandedRequestRect.first == expandedCard && event.clickedIn(expandedRequestRect.second)) {
+                    onClickListeners(expandedCard, REQUEST)
+                    return true
+                }
+                return false
             }
         }
 
         return value
     }
 
+    private fun resetCardBounds() {
+        savingsCardBounds.apply {
+            top = 0f
+            bottom = cardSizeY
+        }
+        payLaterCardBounds.apply {
+            top = 0f
+            bottom = cardSizeY
+        }
+        cryptoCardBounds.apply {
+            top = 0f
+            bottom = cardSizeY
+        }
+    }
+
     private fun RectF.animateHorizontalSizeTo(newLeft: Float, newRight: Float) {
         if (requireAnim) {
             (left to newLeft) {
                 left = it
-                top = 0f
-                bottom = cardSizeY
+                resetCardBounds()
                 invalidate()
             }
             (right to newRight) {
                 right = it
-                top = 0f
-                bottom = cardSizeY
+                resetCardBounds()
                 invalidate()
             }
         } else {
@@ -774,6 +830,9 @@ class HomepageCards @JvmOverloads constructor(
         bounds.offsetTo(cardEnd - cardPadding - 36.dp, bounds.top)
         val cx = bounds.centerX()
         val cy = bounds.centerY()
+
+        if (index == expandedCard)
+            expandedArrowRect = expandedCard to expandedArrowRect.second.apply { set(bounds) }
         bounds.offsetTo(originalLeft, bounds.top)
 
         bgArrowPaint.alpha = alphaProps[index]
@@ -804,12 +863,16 @@ class HomepageCards @JvmOverloads constructor(
     ) {
         eyeRect.apply {
             left = cardEnd - cardPadding - 36.dp
-            top = (bounds.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top - amountTextBounds.height()) / 2f
+            top =
+                (bounds.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top - amountTextBounds.height()) / 2f
             right = left + size * 1.8f
             bottom = top + size * 1.2f
         }
 
         canvas.drawDrawable(resources, R.drawable.ic_eye, eyeRect, alphaPaint)
+
+        if (index == expandedCard)
+            expandedEyeRect = expandedCard to expandedEyeRect.second.apply { set(eyeRect) }
 
         if (cross) {
             canvas.drawLine(
