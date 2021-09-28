@@ -43,11 +43,23 @@ fun Int.setAlpha(alpha: Int): Int {
 fun MotionEvent.clickedIn(area: RectF) =
     area.contains(x, y)
 
+@JvmName("invokeFloatFloat")
 operator fun Pair<Float, Float>.invoke(callback: (Float) -> Unit) {
     with(ValueAnimator.ofFloat(first, second)) {
-        duration = 500
+        duration = 300
         addUpdateListener {
             callback(it.animatedValue as Float)
+        }
+        start()
+    }
+}
+
+@JvmName("invokeIntInt")
+operator fun Pair<Int, Int>.invoke(callback: (Int) -> Unit) {
+    with(ValueAnimator.ofInt(first, second)) {
+        duration = 300
+        addUpdateListener {
+            callback(it.animatedValue as Int)
         }
         start()
     }
