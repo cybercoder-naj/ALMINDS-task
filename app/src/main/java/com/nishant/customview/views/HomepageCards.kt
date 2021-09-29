@@ -1,15 +1,14 @@
 package com.nishant.customview.views
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.core.animation.addListener
 import com.nishant.customview.R
 import com.nishant.customview.utils.*
 import kotlin.math.min
@@ -36,6 +35,14 @@ class HomepageCards @JvmOverloads constructor(
 
     private var requireAnim = false
 
+    private val paddingX = 24.dp
+    private val cardGap = 12.dp
+    private val expandedCardSizeX = 248.dp
+    private val collapsedCardSizeX = 72.dp
+    private val cardSizeY = 300.dp
+    private val bitmapSize = 42.dp
+    private val cardPadding = 24.dp
+
     private var expandedCard = SAVINGS
         set(value) {
             field = value
@@ -43,24 +50,27 @@ class HomepageCards @JvmOverloads constructor(
                 SAVINGS -> {
                     savingsCardBounds.apply {
                         animateHorizontalSizeTo(paddingX, paddingX + expandedCardSizeX)
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     payLaterCardBounds.apply {
                         animateHorizontalSizeTo(
                             paddingX + expandedCardSizeX + cardGap,
                             paddingX + expandedCardSizeX + cardGap + collapsedCardSizeX
                         )
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     cryptoCardBounds.apply {
                         animateHorizontalSizeTo(
                             paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX,
                             paddingX + expandedCardSizeX + 2 * (cardGap + collapsedCardSizeX)
                         )
-                        top = 0f
-                        bottom = cardSizeY
+                    }
+                    tabLayout[SAVINGS]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 12.dp)
+                    }
+                    tabLayout[PAY_LATER]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 4.dp, width / 2f + 12.dp)
+                    }
+                    tabLayout[CRYPTO]!!.apply {
+                        animateHorizontalSizeTo(width / 2f + 20.dp, width / 2f + 36.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (paddingX + cardPadding)) {
@@ -140,24 +150,27 @@ class HomepageCards @JvmOverloads constructor(
                 PAY_LATER -> {
                     savingsCardBounds.apply {
                         animateHorizontalSizeTo(paddingX, paddingX + collapsedCardSizeX)
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     payLaterCardBounds.apply {
                         animateHorizontalSizeTo(
                             paddingX + collapsedCardSizeX + cardGap,
                             paddingX + collapsedCardSizeX + cardGap + expandedCardSizeX
                         )
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     cryptoCardBounds.apply {
                         animateHorizontalSizeTo(
                             paddingX + collapsedCardSizeX + 2 * cardGap + expandedCardSizeX,
                             paddingX + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX
                         )
-                        top = 0f
-                        bottom = cardSizeY
+                    }
+                    tabLayout[SAVINGS]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 32.dp)
+                    }
+                    tabLayout[PAY_LATER]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 24.dp, width / 2f + 12.dp)
+                    }
+                    tabLayout[CRYPTO]!!.apply {
+                        animateHorizontalSizeTo(width / 2f + 20.dp, width / 2f + 36.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (paddingX + (collapsedCardSizeX - bitmapSize) / 2f)) {
@@ -240,24 +253,27 @@ class HomepageCards @JvmOverloads constructor(
                             -collapsedCardSizeX * .3f,
                             -collapsedCardSizeX * .3f + collapsedCardSizeX
                         )
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     payLaterCardBounds.apply {
                         animateHorizontalSizeTo(
                             -collapsedCardSizeX * .3f + collapsedCardSizeX + cardGap,
                             -collapsedCardSizeX * .3f + 2 * collapsedCardSizeX + cardGap
                         )
-                        top = 0f
-                        bottom = cardSizeY
                     }
                     cryptoCardBounds.apply {
                         animateHorizontalSizeTo(
                             -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap),
                             -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX
                         )
-                        top = 0f
-                        bottom = cardSizeY
+                    }
+                    tabLayout[SAVINGS]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 32.dp)
+                    }
+                    tabLayout[PAY_LATER]!!.apply {
+                        animateHorizontalSizeTo(width / 2f - 24.dp, width / 2f - 8.dp)
+                    }
+                    tabLayout[CRYPTO]!!.apply {
+                        animateHorizontalSizeTo(width / 2f, width / 2f + 36.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (-collapsedCardSizeX * .3f + (collapsedCardSizeX - bitmapSize) / 2f)) {
@@ -337,9 +353,16 @@ class HomepageCards @JvmOverloads constructor(
             }
         }
 
-    private val savingsCardBounds = RectF()
-    private val payLaterCardBounds = RectF()
-    private val cryptoCardBounds = RectF()
+    private val savingsCardBounds =
+        RectF(paddingX, 16.dp, paddingX + expandedCardSizeX, cardSizeY + 16.dp)
+    private val payLaterCardBounds = RectF(
+        paddingX + expandedCardSizeX + cardGap, 16.dp,
+        paddingX + expandedCardSizeX + cardGap + collapsedCardSizeX, cardSizeY + 16.dp
+    )
+    private val cryptoCardBounds = RectF(
+        paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX, 16.dp,
+        paddingX + expandedCardSizeX + 2 * (cardGap + collapsedCardSizeX), cardSizeY + 16.dp
+    )
     private val bitmapRect = RectF()
     private val headingTextBounds = Rect()
     private val buttonTextBounds = Rect()
@@ -353,13 +376,11 @@ class HomepageCards @JvmOverloads constructor(
     private var expandedTransferRect = Pair(-1, RectF())
     private var expandedRequestRect = Pair(-1, RectF())
 
-    private val paddingX = 24.dp
-    private val cardGap = 12.dp
-    private val expandedCardSizeX = 248.dp
-    private val collapsedCardSizeX = 72.dp
-    private val cardSizeY = 300.dp
-    private val bitmapSize = 42.dp
-    private val cardPadding = 24.dp
+    private var tabLayout = mapOf(
+        SAVINGS to RectF(),
+        PAY_LATER to RectF(),
+        CRYPTO to RectF()
+    )
 
     private val bitmapPosition = Array(3) {
         when (it) {
@@ -425,11 +446,21 @@ class HomepageCards @JvmOverloads constructor(
     }
 
     @ColorInt
-    private val bgArrowColor = Array(3) {
+    private val bgArrowColor = IntArray(3) {
         when (it) {
             SAVINGS -> Color.parseColor("#3B96FF")
             PAY_LATER -> Color.parseColor("#CF1C50")
             CRYPTO -> Color.parseColor("#25C1B8")
+            else -> Color.WHITE
+        }
+    }
+
+    @ColorInt
+    private val bgCardColor = IntArray(3) {
+        when (it) {
+            SAVINGS -> Color.parseColor("#1B79E6")
+            PAY_LATER -> Color.parseColor("#FF4077")
+            CRYPTO -> Color.parseColor("#37D8CF")
             else -> Color.WHITE
         }
     }
@@ -481,6 +512,10 @@ class HomepageCards @JvmOverloads constructor(
         color = Color.parseColor("#B7D2F2")
         strokeWidth = 2.dp
     }
+    private val tabPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL
+        color = Color.parseColor("#E2E2E2")
+    }
     private val alphaPaint = Paint()
 
     var amount: FloatArray = FloatArray(3)
@@ -507,7 +542,7 @@ class HomepageCards @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val desiredWidth = 420.dp.toInt()
-        val desiredHeight = 316.dp.toInt()
+        val desiredHeight = 356.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -533,7 +568,32 @@ class HomepageCards @JvmOverloads constructor(
         if (canvas == null)
             return
 
+        if (!requireAnim)
+            initTabRectF()
+
         drawAllCards(canvas)
+        drawTabIndicator(canvas)
+    }
+
+    private fun initTabRectF() {
+        tabLayout[SAVINGS]!!.apply {
+            left = width / 2f - 48.dp
+            top = height - 24.dp
+            right = left + 36.dp
+            bottom = top + 16.dp
+        }
+        tabLayout[PAY_LATER]!!.apply {
+            left = tabLayout[SAVINGS]!!.right + 8.dp
+            top = height - 24.dp
+            right = left + 16.dp
+            bottom = top + 16.dp
+        }
+        tabLayout[CRYPTO]!!.apply {
+            left = tabLayout[PAY_LATER]!!.right + 8.dp
+            top = height - 24.dp
+            right = left + 16.dp
+            bottom = top + 16.dp
+        }
     }
 
     private fun drawAllCards(canvas: Canvas) {
@@ -545,12 +605,7 @@ class HomepageCards @JvmOverloads constructor(
                 CRYPTO -> cryptoCardBounds
                 else -> RectF()
             }
-            cardPaint.color = when (card) {
-                SAVINGS -> Color.parseColor("#1B79E6")
-                PAY_LATER -> Color.parseColor("#FF4077")
-                CRYPTO -> Color.parseColor("#37D8CF")
-                else -> Color.BLACK
-            }
+            cardPaint.color = bgCardColor[card]
             drawCard(canvas, cardBounds, cardPaint)
             bitmapRect.apply {
                 left = bitmapPosition[card].x
@@ -688,19 +743,24 @@ class HomepageCards @JvmOverloads constructor(
         }
     }
 
+    private fun drawTabIndicator(canvas: Canvas) {
+        for (card in 0..2) {
+            canvas.drawRoundRect(tabLayout[card]!!, 16.dp, 16.dp, tabPaint.apply {
+                color = if (card == expandedCard) bgCardColor[card] else Color.parseColor("#E2E2E2")
+            })
+        }
+    }
+
     private fun drawCard(canvas: Canvas, bounds: RectF, paint: Paint) {
-        val offsetY = 16.dp
         with(canvas) {
             drawRoundRect(
-                bounds.apply {
-                    offset(0f, offsetY)
-                },
+                bounds.apply { offset(0f, 4.dp) },
                 36.dp,
                 36.dp,
                 shadowPaint
             )
             drawRoundRect(
-                bounds,
+                bounds.apply { offset(0f, (-4).dp) },
                 36.dp,
                 36.dp,
                 paint
@@ -767,7 +827,8 @@ class HomepageCards @JvmOverloads constructor(
                     return true
                 }
                 if (expandedTransferRect.first == expandedCard
-                    && event.clickedIn(expandedTransferRect.second)) {
+                    && event.clickedIn(expandedTransferRect.second)
+                ) {
                     onClickListeners(expandedCard, TRANSFER)
                     return true
                 }
@@ -780,22 +841,6 @@ class HomepageCards @JvmOverloads constructor(
         }
 
         return value
-    }
-
-    override fun invalidate() {
-        savingsCardBounds.apply {
-            top = 0f
-            bottom = cardSizeY
-        }
-        payLaterCardBounds.apply {
-            top = 0f
-            bottom = cardSizeY
-        }
-        cryptoCardBounds.apply {
-            top = 0f
-            bottom = cardSizeY
-        }
-        super.invalidate()
     }
 
     private fun RectF.animateHorizontalSizeTo(newLeft: Float, newRight: Float) {
