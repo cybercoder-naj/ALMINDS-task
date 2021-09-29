@@ -22,5 +22,11 @@ class MainActivity : AppCompatActivity() {
         binding.cards.onClickListeners = { expandedCard, buttonType ->
             Snackbar.make(this, binding.cards, "Pressed button $buttonType on card $expandedCard", Snackbar.LENGTH_SHORT).show()
         }
+
+        binding.homeIcon.apply {
+            iconUrl = "https://cybercoder-naj.github.io/assets/nishant.png"
+            text = "Nishant"
+            date = "Sep 28 2020"
+        }
     }
 }
