@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
@@ -44,7 +43,7 @@ class HomepageCards @JvmOverloads constructor(
         }
     }
 
-    private var requireAnim = false
+    private var notFirstRender = false
 
     private val paddingX = 24.dp
     private val cardGap = 12.dp
@@ -83,7 +82,7 @@ class HomepageCards @JvmOverloads constructor(
                     tabLayout[CRYPTO]!!.apply {
                         animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
                     }
-                    if (requireAnim) {
+                    if (notFirstRender) {
                         (bitmapPosition[SAVINGS].x to (paddingX + cardPadding)) {
                             bitmapPosition[SAVINGS].x = it
                             invalidate()
@@ -183,7 +182,7 @@ class HomepageCards @JvmOverloads constructor(
                     tabLayout[CRYPTO]!!.apply {
                         animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
                     }
-                    if (requireAnim) {
+                    if (notFirstRender) {
                         (bitmapPosition[SAVINGS].x to (paddingX + (collapsedCardSizeX - bitmapSize) / 2f)) {
                             bitmapPosition[SAVINGS].x = it
                             invalidate()
@@ -286,7 +285,7 @@ class HomepageCards @JvmOverloads constructor(
                     tabLayout[CRYPTO]!!.apply {
                         animateHorizontalSizeTo(width / 2f - 8, width / 2f + 24.dp)
                     }
-                    if (requireAnim) {
+                    if (notFirstRender) {
                         (bitmapPosition[SAVINGS].x to (-collapsedCardSizeX * .3f + (collapsedCardSizeX - bitmapSize) / 2f)) {
                             bitmapPosition[SAVINGS].x = it
                             invalidate()
@@ -578,7 +577,7 @@ class HomepageCards @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        if (!requireAnim)
+        if (!notFirstRender)
             initTabRectF()
 
         drawAllCards(canvas)
@@ -787,12 +786,12 @@ class HomepageCards @JvmOverloads constructor(
                     SAVINGS -> {
                         when {
                             event.clickedIn(payLaterCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_PAY_LATER
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_CRYPTO
                                 return true
                             }
@@ -801,12 +800,12 @@ class HomepageCards @JvmOverloads constructor(
                     PAY_LATER -> {
                         when {
                             event.clickedIn(savingsCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_CRYPTO
                                 return true
                             }
@@ -815,12 +814,12 @@ class HomepageCards @JvmOverloads constructor(
                     CRYPTO -> {
                         when {
                             event.clickedIn(savingsCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
                             event.clickedIn(payLaterCardBounds) -> {
-                                requireAnim = true
+                                notFirstRender = true
                                 touchType = TouchType.EXPAND_PAY_LATER
                                 return true
                             }
@@ -851,6 +850,7 @@ class HomepageCards @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 expandedCard = touchType.getInt()
                 touchType = TouchType.UP
+                invalidate()
             }
         }
 
@@ -858,7 +858,7 @@ class HomepageCards @JvmOverloads constructor(
     }
 
     private fun RectF.animateHorizontalSizeTo(newLeft: Float, newRight: Float) {
-        if (requireAnim) {
+        if (notFirstRender) {
             (left to newLeft) {
                 left = it
                 invalidate()
