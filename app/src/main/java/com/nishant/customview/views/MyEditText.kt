@@ -17,7 +17,7 @@ class MyEditText @JvmOverloads constructor(
     defStyleAttr: Int = R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox
 ) : TextInputLayout(context, attrs, defStyleAttr) {
 
-    val editText = TextInputEditText(context)
+    private val editText = TextInputEditText(context, null)
 
     init {
         setWillNotDraw(false)
@@ -27,19 +27,13 @@ class MyEditText @JvmOverloads constructor(
                 LayoutParams.MATCH_PARENT,
                 56.dp.toInt()
             )
-            compoundDrawablePadding = 16
+            compoundDrawablePadding = 16.dp.toInt()
             setPadding(24, 32, 0, 32)
             setBackgroundResource(R.drawable.bg_textinput)
             setTextColor(Color.parseColor("#243257"))
 
             with(context.obtainStyledAttributes(attrs, R.styleable.MyEditText)) {
                 hint = getString(R.styleable.MyEditText_android_hint)
-//                setCompoundDrawablesWithIntrinsicBounds(
-//                    getDrawableOrThrow(R.styleable.MyEditText_android_drawableStart),
-//                    null,
-//                    null,
-//                    null
-//                )
                 if (getBoolean(R.styleable.MyEditText_password, false)) {
                     inputType = EditorInfo.TYPE_TEXT_VARIATION_PASSWORD
                     endIconMode = END_ICON_PASSWORD_TOGGLE

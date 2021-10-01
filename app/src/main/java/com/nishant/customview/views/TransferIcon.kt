@@ -42,20 +42,20 @@ class TransferIcon @JvmOverloads constructor(
     }
     private val shadowPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = Color.parseColor("#DDDDDD")
+        maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
     }
     private val textPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        textSize = 18.sp
-        strokeWidth = 1.dp
+        textSize = 14.5f.sp
+        typeface = Typeface.DEFAULT
     }
     private val textBounds = Rect()
-    private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
-
     private val iconRect = RectF()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 96.dp.toInt()
-        val desiredHeight = 150.dp.toInt()
+        val desiredWidth = (context.resources.displayMetrics.widthPixels - 32.dp.toInt()) / 4
+        val desiredHeight = 120.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -81,11 +81,6 @@ class TransferIcon @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        shadowPaint.apply {
-            color = Color.parseColor("#DDDDDD")
-            maskFilter = shadowFilter
-        }
-
         if (iconRes == R.drawable.ic_history) {
             iconBgPaint.color = primaryColor
             textPaint.color = primaryColor
@@ -95,17 +90,17 @@ class TransferIcon @JvmOverloads constructor(
         }
 
         val iconX = width * .5f
-        val iconY = height * .35f
-        val iconR = width * .3f
+        val iconR = width * .25f
+        val iconY = iconR + 1.dp
 
         iconRect.apply {
-            left = iconX - iconR + 16.dp
-            top = iconY - iconR + 16.dp
-            right = iconX + iconR - 16.dp
-            bottom = iconY + iconR - 16.dp
+            left = iconX - iconR + 12.dp
+            top = iconY - iconR + 12.dp
+            right = iconX + iconR - 12.dp
+            bottom = iconY + iconR - 12.dp
         }
 
-        canvas.drawCircle(iconX, iconY + 6.dp, iconR, shadowPaint)
+        canvas.drawCircle(iconX, iconY + 2.dp, iconR, shadowPaint)
         canvas.drawCircle(iconX, iconY, iconR, iconBgPaint)
         icon?.toBitmap()?.let {
             canvas.drawBitmap(
@@ -121,7 +116,7 @@ class TransferIcon @JvmOverloads constructor(
             canvas.drawText(
                 it,
                 iconX - textBounds.width() / 2f,
-                height * .9f - textBounds.height(),
+                iconY + iconR + 20.dp + textBounds.height(),
                 textPaint
             )
         }

@@ -8,7 +8,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "21 Sep 2021 22:24:10",
+            "01 Oct 2021 10:24pm",
             "UPI",
             10000f,
             TransactionItem.CREDIT
@@ -16,7 +16,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "22 Sep 2021 22:24:10",
+            "22 Sep 2021 10:24pm",
             "UPI",
             6400.4f,
             TransactionItem.DEBIT
@@ -24,7 +24,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "23 Sep 2021 22:24:10",
+            "23 Sep 2021 10:24pm",
             "UPI",
             1000.28f,
             TransactionItem.CREDIT
@@ -32,7 +32,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "21 Aug 2021 22:24:10",
+            "21 Aug 2021 10:24pm",
             "UPI",
             10000f,
             TransactionItem.CREDIT
@@ -40,7 +40,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "22 Aug 2021 22:24:10",
+            "22 Aug 2021 10:24pm",
             "UPI",
             6400.4f,
             TransactionItem.DEBIT
@@ -48,7 +48,7 @@ object DummyData {
         TransactionItem(
             "Nishant",
             "https://cybercoder-naj.github.io/assets/nishant.png",
-            "23 Oct 2021 22:24:10",
+            "23 Oct 2021 10:24pm",
             "UPI",
             1000.28f,
             TransactionItem.CREDIT

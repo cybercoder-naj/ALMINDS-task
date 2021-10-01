@@ -67,6 +67,8 @@ class DebitTypeView @JvmOverloads constructor(
         ResourcesCompat.getDrawable(resources, R.drawable.ic_right_arrow, null)
     private val shadowPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = Color.parseColor("#80CCCCCC")
+        maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
     }
     private val curvePath = Path()
     private val shadowPath = Path()
@@ -74,38 +76,38 @@ class DebitTypeView @JvmOverloads constructor(
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        textSize = 18.sp
-        strokeWidth = 1.dp
+        textSize = 16.sp
+        typeface = Typeface.DEFAULT
     }
     private val nameTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 26.sp
-        strokeWidth = 1.dp
+        textSize = 24.sp
+        typeface = Typeface.DEFAULT
     }
     private val methodTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#8498AB")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 16.sp
+        typeface = Typeface.DEFAULT
     }
     private val transactionTypePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#EC7696")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 24.sp
+        typeface = Typeface.DEFAULT
     }
     private val amountIntegralPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 24.sp
-        strokeWidth = 1.5f.dp
+        textSize = 26.sp
+        typeface = Typeface.DEFAULT_BOLD
     }
     private val amountFractionalPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 18.sp
+        typeface = Typeface.DEFAULT
     }
     private val dotPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -116,7 +118,6 @@ class DebitTypeView @JvmOverloads constructor(
         color = Color.WHITE
         strokeWidth = 1.dp
     }
-    private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
 
     var imageDr: String? = null
         set(value) {
@@ -132,7 +133,6 @@ class DebitTypeView @JvmOverloads constructor(
                 .allowHardware(false)
                 .build()
             loader.enqueue(request)
-
         }
     var imageResource: Int = 0
         set(value) {
@@ -214,7 +214,7 @@ class DebitTypeView @JvmOverloads constructor(
         val date = datetime.substring(0, datetime.lastIndexOf(" "))
 
         return if (today != date)
-            date
+            date.substring(0, date.lastIndexOf(" "))
         else
             datetime.substring(datetime.lastIndexOf(" ") + 1)
     }
@@ -229,8 +229,8 @@ class DebitTypeView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 320.dp.toInt()
-        val desiredHeight = 175.dp.toInt()
+        val desiredWidth = ((context.resources.displayMetrics.widthPixels - 24.dp) * .9).toInt()
+        val desiredHeight = 144.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -256,7 +256,7 @@ class DebitTypeView @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        profileX = (width - offset) * .175f
+        profileX = (width - offset) * .125f
         profileY = (height - offset) * .275f
         profileR = (height - offset) / 5.5f
 
@@ -270,11 +270,6 @@ class DebitTypeView @JvmOverloads constructor(
         shadowPath.moveTo(width.toFloat(), 0f)
         curvePath.moveTo(width - offsetSmall, offsetSmall)
         part1Path.moveTo(width - offsetSmall, offsetSmall)
-
-        shadowPaint.apply {
-            color = Color.parseColor("#80CCCCCC")
-            maskFilter = shadowFilter
-        }
 
         drawBackground(canvas)
         drawPart1(canvas)
@@ -363,7 +358,7 @@ class DebitTypeView @JvmOverloads constructor(
 
         dotX = nameX + nameW + width / 32f
         dotY = nameY - nameH / 2.75f
-        canvas.drawCircle(dotX, dotY, 4.dp, dotPaint)
+        canvas.drawCircle(dotX, dotY, 3.dp, dotPaint)
         return true
     }
 
@@ -373,7 +368,7 @@ class DebitTypeView @JvmOverloads constructor(
         nameW = nameBounds.width().toFloat()
         nameH = nameBounds.height().toFloat()
 
-        nameX = profileX + profileR + width / 20f
+        nameX = profileX + profileR + width / 26f
         nameY = profileY + nameH / 2f
         canvas.drawText(name, nameX, nameY, nameTextPaint)
     }

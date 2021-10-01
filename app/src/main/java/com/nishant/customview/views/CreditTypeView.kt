@@ -1,11 +1,14 @@
 package com.nishant.customview.views
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
@@ -70,6 +73,8 @@ class CreditTypeView @JvmOverloads constructor(
         ResourcesCompat.getDrawable(resources, R.drawable.ic_right_arrow, null)
     private val shadowPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = Color.parseColor("#80CCCCCC")
+        maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
     }
     private val curvePath = Path().apply {
         moveTo(offsetSmall, offsetSmall)
@@ -83,38 +88,38 @@ class CreditTypeView @JvmOverloads constructor(
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        textSize = 18.sp
-        strokeWidth = 1.dp
+        textSize = 16.sp
+        typeface = Typeface.DEFAULT
     }
     private val nameTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 26.sp
-        strokeWidth = 1.dp
+        textSize = 24.sp
+        typeface = Typeface.DEFAULT
     }
     private val methodTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#8498AB")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 16.sp
+        typeface = Typeface.DEFAULT
     }
     private val transactionTypePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#37D8CF")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 24.sp
+        typeface = Typeface.DEFAULT
     }
     private val amountIntegralPaint = Paint(ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL_AND_STROKE
+        style = Paint.Style.FILL
         color = Color.parseColor("#243257")
-        textSize = 24.sp
-        strokeWidth = 1.5f.dp
+        textSize = 26.sp
+        typeface = Typeface.DEFAULT_BOLD
     }
     private val amountFractionalPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#243257")
-        textSize = 22.sp
-        strokeWidth = 1.dp
+        textSize = 18.sp
+        typeface = Typeface.DEFAULT
     }
     private val dotPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -125,7 +130,6 @@ class CreditTypeView @JvmOverloads constructor(
         color = Color.WHITE
         strokeWidth = 1.dp
     }
-    private val shadowFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
 
     var imageCr: String? = null
         set(value) {
@@ -141,7 +145,6 @@ class CreditTypeView @JvmOverloads constructor(
                 .allowHardware(false)
                 .build()
             loader.enqueue(request)
-
         }
     var imageResource: Int = 0
         set(value) {
@@ -224,7 +227,7 @@ class CreditTypeView @JvmOverloads constructor(
         val date = datetime.substring(0, datetime.lastIndexOf(" "))
 
         return if (today != date)
-            date
+            date.substring(0, date.lastIndexOf(" "))
         else
             datetime.substring(datetime.lastIndexOf(" ") + 1)
     }
@@ -239,8 +242,8 @@ class CreditTypeView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 320.dp.toInt()
-        val desiredHeight = 175.dp.toInt()
+        val desiredWidth = ((context.resources.displayMetrics.widthPixels - 24.dp) * .9).toInt()
+        val desiredHeight = 144.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -266,7 +269,7 @@ class CreditTypeView @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        profileX = (width - offset) * .875f
+        profileX = (width - offset) * .9f
         profileY = (height - offset) * .275f
         profileR = (height - offset) / 5.5f
 
@@ -275,11 +278,6 @@ class CreditTypeView @JvmOverloads constructor(
             top = profileY - profileR + 4.dp
             right = profileX + profileR - 4.dp
             bottom = profileY + profileR - 4.dp
-        }
-
-        shadowPaint.apply {
-            color = Color.parseColor("#80CCCCCC")
-            maskFilter = shadowFilter
         }
 
         drawBackground(canvas)
@@ -298,7 +296,7 @@ class CreditTypeView @JvmOverloads constructor(
         if (amountCr != -1f)
             writeAmount(amountCr, canvas)
         rightArrow?.toBitmap()?.let {
-            canvas.drawBitmap(it, width * .825f, transactionY - it.height, null)
+            canvas.drawBitmap(it, width * .875f, transactionY - it.height, null)
         }
     }
 
@@ -363,7 +361,7 @@ class CreditTypeView @JvmOverloads constructor(
 
         dotX = nameX - width / 32f
         dotY = nameY - nameH / 2.75f
-        canvas.drawCircle(dotX, dotY, 4.dp, dotPaint)
+        canvas.drawCircle(dotX, dotY, 3.dp, dotPaint)
         return true
     }
 
@@ -373,7 +371,7 @@ class CreditTypeView @JvmOverloads constructor(
         nameW = nameBounds.width().toFloat()
         nameH = nameBounds.height().toFloat()
 
-        nameX = profileX - profileR - width / 16f - nameW
+        nameX = profileX - profileR - width / 24f - nameW
         nameY = profileY + nameH / 2f
         canvas.drawText(name, nameX, nameY, nameTextPaint)
     }

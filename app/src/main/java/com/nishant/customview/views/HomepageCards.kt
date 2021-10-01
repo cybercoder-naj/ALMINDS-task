@@ -523,9 +523,7 @@ class HomepageCards @JvmOverloads constructor(
             field = value.map { round(it * 100f) / 100f }.toFloatArray()
             invalidate()
         }
-    var onClickListeners: (expandedCard: Int, buttonType: Int) -> Unit = { _, _ ->
-        throw IllegalStateException("On Click Listener has not been initialised")
-    }
+    var onClickListeners: (expandedCard: Int, buttonType: Int) -> Unit = { _, _ -> }
 
     private var showAmount = BooleanArray(3)
         set(value) {

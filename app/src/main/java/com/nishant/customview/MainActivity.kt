@@ -15,18 +15,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragmentContainer, TransactionsFragment())
-//            .commit()
-
-        binding.cards.onClickListeners = { expandedCard, buttonType ->
-            Snackbar.make(this, binding.cards, "Pressed button $buttonType on card $expandedCard", Snackbar.LENGTH_SHORT).show()
-        }
-
-        binding.homeIcon.apply {
-            iconUrl = "https://cybercoder-naj.github.io/assets/nishant.png"
-            text = "Nishant"
-            date = "Sep 28 2020"
-        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, when(intent.getIntExtra("frag", 1)) {
+                1 -> TransactionsFragment()
+                2 -> DemoFragment()
+                else -> TODO()
+            })
+            .commit()
     }
 }

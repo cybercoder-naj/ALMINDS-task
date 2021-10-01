@@ -32,7 +32,7 @@ class TransactionsViewModel : ViewModel() {
             TransferIconData("Past Trans.", R.drawable.ic_history),
             TransferIconData("To Contacts", R.drawable.ic_user),
             TransferIconData("To Banks", R.drawable.ic_bank),
-            TransferIconData("to UPI", R.drawable.ic_upi)
+            TransferIconData("to UPI ID", R.drawable.ic_upi)
         )
 
         _paymentMethods.value = DummyData.paymentMethods
