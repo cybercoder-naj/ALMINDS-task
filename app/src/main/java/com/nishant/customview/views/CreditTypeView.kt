@@ -1,14 +1,11 @@
 package com.nishant.customview.views
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewOutlineProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
@@ -32,10 +29,10 @@ class CreditTypeView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    private var offset = 6.dp
-    private var offsetSmall = offset / 3f
-
     private val dateBounds = Rect()
+    private val dateBounds2 = Rect()
+
+    private val shadowOffset = 5.dp
 
     private var profileX = 0f
     private var profileY = 0f
@@ -77,18 +74,18 @@ class CreditTypeView @JvmOverloads constructor(
         maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
     }
     private val curvePath = Path().apply {
-        moveTo(offsetSmall, offsetSmall)
+        moveTo(0f, shadowOffset)
     }
     private val shadowPath = Path().apply {
         moveTo(0f, 0f)
     }
     private val part1Path = Path().apply {
-        moveTo(offsetSmall, offsetSmall)
+        moveTo(0f, shadowOffset)
     }
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        textSize = 16.sp
+        textSize = 18.sp
         typeface = Typeface.DEFAULT
     }
     private val nameTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
@@ -169,6 +166,7 @@ class CreditTypeView @JvmOverloads constructor(
             field = value?.let { getDateTime(it) }
             postInvalidate()
         }
+    private var dateType: String? = null
     var methodCr: String? = null
         set(value) {
             field = value
@@ -196,12 +194,6 @@ class CreditTypeView @JvmOverloads constructor(
             transactionTypePaint.color = field
             postInvalidate()
         }
-    var shadowRadius: Float
-        get() = offset
-        set(value) {
-            offset = value
-            offsetSmall = value / 3f
-        }
 
     init {
         with(context.obtainStyledAttributes(attrs, R.styleable.CreditTypeView)) {
@@ -226,10 +218,13 @@ class CreditTypeView @JvmOverloads constructor(
         val today = dateFormat.format(Date(Calendar.getInstance().timeInMillis))
         val date = datetime.substring(0, datetime.lastIndexOf(" "))
 
-        return if (today != date)
+        return if (today != date) {
+            dateType = "date"
             date.substring(0, date.lastIndexOf(" "))
-        else
+        } else {
+            dateType = "time"
             datetime.substring(datetime.lastIndexOf(" ") + 1)
+        }
     }
 
     fun setProperties(transactionItem: TransactionItem) {
@@ -269,9 +264,9 @@ class CreditTypeView @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        profileX = (width - offset) * .9f
-        profileY = (height - offset) * .275f
-        profileR = (height - offset) / 5.5f
+        profileX = (width) * .9f
+        profileY = (height) * .275f
+        profileR = (height) / 5.5f
 
         profileRect.apply {
             left = profileX - profileR + 4.dp
@@ -393,34 +388,68 @@ class CreditTypeView @JvmOverloads constructor(
 
         canvas.rotate(
             -90f,
-            (width / 8f - offsetSmall + dateBounds.height()) / 2,
-            height - offset - 8.dp
+            (width / 8f + dateBounds.height()) / 2,
+            height - 8.dp
         )
         canvas.translate(10.dp, 2.dp)
-        canvas.drawText(
-            text,
-            (width / 8f - offsetSmall + dateBounds.height()) / 2,
-            height - offset - 8.dp,
-            dateTextPaint
-        )
+        if (dateType == "time") {
+            canvas.drawText(
+                text,
+                (width / 8f + dateBounds.height()) / 2,
+                height - 8.dp,
+                dateTextPaint
+            )
+        } else {
+            val (day, month) = text.split(" ")
+            val superscript = if (day.endsWith("1") && day != "11") {
+                "st"
+            } else if (day.endsWith("2") && day != "12") {
+                "nd"
+            } else if (day.endsWith("3") && day != "13") {
+                "rd"
+            } else "th"
+
+            canvas.drawText(
+                day,
+                (width / 8f + dateBounds.height()) / 2,
+                height - 8.dp,
+                dateTextPaint
+            )
+            dateTextPaint.getTextBounds(day, 0, day.length, dateBounds2)
+            val w = dateBounds2.width()
+            val h = dateBounds2.height()
+            dateTextPaint.getTextBounds(superscript, 0, day.length, dateBounds2)
+            canvas.drawText(
+                superscript,
+                (width / 8f + dateBounds.height()) / 2 + w + 1.5f.dp,
+                height - 8.dp - h + dateBounds2.height() * .6f,
+                dateTextPaint.apply { textSize = 14.sp }
+            )
+            canvas.drawText(
+                month,
+                (width / 8f + dateBounds.height()) / 2 + w + dateBounds2.width() + 4.dp,
+                height - 8.dp,
+                dateTextPaint.apply { textSize = 16.sp }
+            )
+        }
         canvas.translate(-(10.dp), (-2).dp)
         canvas.rotate(
             90f,
-            (width / 8f - offsetSmall + dateBounds.height()) / 2,
-            height - offset - 8.dp
+            (width / 8f + dateBounds.height()) / 2,
+            height - 8.dp
         )
     }
 
     private fun drawPart1(canvas: Canvas) {
         part1Path.apply {
-            lineTo(width / 8f, offsetSmall)
-            lineTo(width / 8f, height - offset)
-            lineTo(offsetSmall + cornerRadius, height - offset)
+            lineTo(width / 8f, shadowOffset)
+            lineTo(width / 8f, height - shadowOffset)
+            lineTo(cornerRadius, height - shadowOffset)
             arcTo(
-                offsetSmall,
-                height - offset - cornerRadius,
-                offsetSmall + cornerRadius,
-                height - offset,
+                0f,
+                height - shadowOffset - cornerRadius,
+                cornerRadius,
+                height - shadowOffset,
                 90f,
                 90f,
                 false
@@ -434,32 +463,32 @@ class CreditTypeView @JvmOverloads constructor(
         drawShadow(canvas)
 
         curvePath.apply {
-            lineTo(width - offset - cornerRadius, offsetSmall)
+            lineTo(width - shadowOffset - cornerRadius, shadowOffset)
             arcTo(
-                width - offset - cornerRadius,
-                offsetSmall,
-                width - offset,
-                offsetSmall + cornerRadius,
+                width - shadowOffset - cornerRadius,
+                shadowOffset,
+                width - shadowOffset,
+                shadowOffset + cornerRadius,
                 270f,
                 90f,
                 false
             )
-            lineTo(width - offset, height - offset - cornerRadius)
+            lineTo(width - shadowOffset, height - shadowOffset - cornerRadius)
             arcTo(
-                width - offset - cornerRadius,
-                height - offset - cornerRadius,
-                width - offset,
-                height - offset,
+                width - shadowOffset - cornerRadius,
+                height - shadowOffset - cornerRadius,
+                width - shadowOffset,
+                height - shadowOffset,
                 0f,
                 90f,
                 false
             )
-            lineTo(cornerRadius + offsetSmall, height - offset)
+            lineTo(cornerRadius, height - shadowOffset)
             arcTo(
-                offsetSmall,
-                height - offset - cornerRadius,
-                offsetSmall + cornerRadius,
-                height - offset,
+                0f,
+                height - shadowOffset - cornerRadius,
+                cornerRadius,
+                height - shadowOffset,
                 90f,
                 90f,
                 false

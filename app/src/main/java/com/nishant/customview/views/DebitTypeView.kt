@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
@@ -29,8 +31,9 @@ class DebitTypeView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(ctx, attrs, defStyleAttr, defStyleRes) {
 
-    private var offset = 6.dp
-    private var offsetSmall = offset / 3f
+    private val dateBounds2 = Rect()
+
+    private val shadowOffset = 5.dp
 
     private val dateBounds = Rect()
 
@@ -76,7 +79,7 @@ class DebitTypeView @JvmOverloads constructor(
     private val dateTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.WHITE
-        textSize = 16.sp
+        textSize = 18.sp
         typeface = Typeface.DEFAULT
     }
     private val nameTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
@@ -157,6 +160,7 @@ class DebitTypeView @JvmOverloads constructor(
             field = value?.let { getDateTime(it) }
             postInvalidate()
         }
+    private var dateType: String? = null
     var methodDr: String? = null
         set(value) {
             field = value
@@ -184,12 +188,6 @@ class DebitTypeView @JvmOverloads constructor(
             transactionTypePaint.color = field
             postInvalidate()
         }
-    var shadowRadius: Float
-        get() = offset
-        set(value) {
-            offset = value
-            offsetSmall = value / 3f
-        }
 
     init {
         with(context.obtainStyledAttributes(attrs, R.styleable.DebitTypeView)) {
@@ -200,6 +198,8 @@ class DebitTypeView @JvmOverloads constructor(
             amountDr = getFloat(R.styleable.DebitTypeView_amountDr, -1f)
             recycle()
         }
+
+        //elevation = 4.dp
     }
 
     constructor(ctx: Context, transactionItem: TransactionItem) : this(ctx) {
@@ -213,10 +213,13 @@ class DebitTypeView @JvmOverloads constructor(
         val today = dateFormat.format(Date(Calendar.getInstance().timeInMillis))
         val date = datetime.substring(0, datetime.lastIndexOf(" "))
 
-        return if (today != date)
+        return if (today != date) {
+            dateType = "date"
             date.substring(0, date.lastIndexOf(" "))
-        else
+        } else {
+            dateType = "time"
             datetime.substring(datetime.lastIndexOf(" ") + 1)
+        }
     }
 
     fun setProperties(transactionItem: TransactionItem) {
@@ -256,9 +259,9 @@ class DebitTypeView @JvmOverloads constructor(
         if (canvas == null)
             return
 
-        profileX = (width - offset) * .125f
-        profileY = (height - offset) * .275f
-        profileR = (height - offset) / 5.5f
+        profileX = (width) * .125f
+        profileY = (height) * .275f
+        profileR = (height) / 5.5f
 
         profileRect.apply {
             left = profileX - profileR + 4.dp
@@ -268,8 +271,8 @@ class DebitTypeView @JvmOverloads constructor(
         }
 
         shadowPath.moveTo(width.toFloat(), 0f)
-        curvePath.moveTo(width - offsetSmall, offsetSmall)
-        part1Path.moveTo(width - offsetSmall, offsetSmall)
+        curvePath.moveTo(width.toFloat(), shadowOffset)
+        part1Path.moveTo(width.toFloat(), shadowOffset)
 
         drawBackground(canvas)
         drawPart1(canvas)
@@ -391,39 +394,73 @@ class DebitTypeView @JvmOverloads constructor(
         canvas.apply {
             rotate(
                 -90f,
-                (width * 1.875f - offsetSmall - dateBounds.height()) / 2f,
-                height - offset - 8.dp
+                (width * 1.875f - shadowOffset - dateBounds.height()) / 2f,
+                height - shadowOffset - 8.dp,
             )
             translate(10.dp, 14.dp)
-            drawText(
-                text,
-                (width * 1.875f - offsetSmall - dateBounds.height()) / 2f,
-                height - offset - 8.dp,
-                dateTextPaint
-            )
+            if (dateType == "time") {
+                drawText(
+                    text,
+                    (width * 1.875f - shadowOffset - dateBounds.height()) / 2f,
+                    height - shadowOffset - 8.dp,
+                    dateTextPaint
+                )
+            } else {
+                val (day, month) = text.split(" ")
+                val superscript = if (day.endsWith("1") && day != "11") {
+                    "st"
+                } else if (day.endsWith("2") && day != "12") {
+                    "nd"
+                } else if (day.endsWith("3") && day != "13") {
+                    "rd"
+                } else "th"
+
+                canvas.drawText(
+                    day,
+                    (width * 1.875f - shadowOffset - dateBounds.height()) / 2f,
+                    height - shadowOffset - 8.dp,
+                    dateTextPaint
+                )
+                dateTextPaint.getTextBounds(day, 0, day.length, dateBounds2)
+                val w = dateBounds2.width()
+                val h = dateBounds2.height()
+                dateTextPaint.getTextBounds(superscript, 0, day.length, dateBounds2)
+                canvas.drawText(
+                    superscript,
+                    (width * 1.875f - shadowOffset - dateBounds.height()) / 2f + w + 1.5f.dp,
+                    height - shadowOffset - 8.dp - h + dateBounds2.height() * .6f,
+                    dateTextPaint.apply { textSize = 14.sp }
+                )
+                canvas.drawText(
+                    month,
+                    (width * 1.875f - shadowOffset - dateBounds.height()) / 2f + w + dateBounds2.width() + 4f.dp,
+                    height - shadowOffset - 8.dp,
+                    dateTextPaint.apply { textSize = 16.sp }
+                )
+            }
             translate((-10).dp, (-14).dp)
             rotate(
                 90f,
-                (width * 1.875f - offsetSmall - dateBounds.height()) / 2f,
-                height - offset - 8.dp
+                (width * 1.875f - shadowOffset - dateBounds.height()) / 2f,
+                height - shadowOffset - 8.dp,
             )
         }
     }
 
     private fun drawPart1(canvas: Canvas) {
         part1Path.apply {
-            lineTo(width - offsetSmall, height - offset - cornerRadius)
+            lineTo(width.toFloat(), height - shadowOffset - cornerRadius)
             arcTo(
-                width - offsetSmall - cornerRadius,
-                height - offset - cornerRadius,
-                width - offsetSmall,
-                height - offset,
+                width - cornerRadius,
+                height - shadowOffset - cornerRadius,
+                width.toFloat(),
+                height - shadowOffset,
                 0f,
                 90f,
                 false
             )
-            lineTo(width * .875f, height - offset)
-            lineTo(width * .875f, offsetSmall)
+            lineTo(width * .875f, height - shadowOffset)
+            lineTo(width * .875f, shadowOffset)
         }
 
         canvas.drawPath(part1Path, part1Paint)
@@ -433,32 +470,32 @@ class DebitTypeView @JvmOverloads constructor(
         drawShadow(canvas)
 
         curvePath.apply {
-            lineTo(width - offsetSmall, height - offset - cornerRadius)
+            lineTo(width.toFloat(), height - shadowOffset - cornerRadius)
             arcTo(
-                width - offsetSmall - cornerRadius,
-                height - offset - cornerRadius,
-                width - offsetSmall,
-                height - offset,
+                width - cornerRadius,
+                height - shadowOffset - cornerRadius,
+                width.toFloat(),
+                height - shadowOffset,
                 0f,
                 90f,
                 false
             )
-            lineTo(offset + cornerRadius, height - offset)
+            lineTo(shadowOffset + cornerRadius, height - shadowOffset)
             arcTo(
-                offset,
-                height - offset - cornerRadius,
-                offset + cornerRadius,
-                height - offset,
+                shadowOffset,
+                height - shadowOffset - cornerRadius,
+                shadowOffset + cornerRadius,
+                height - shadowOffset,
                 90f,
                 90f,
                 false
             )
-            lineTo(offset, offsetSmall + cornerRadius)
+            lineTo(shadowOffset, shadowOffset + cornerRadius)
             arcTo(
-                offset,
-                offsetSmall,
-                offset + cornerRadius,
-                offsetSmall + cornerRadius,
+                shadowOffset,
+                shadowOffset,
+                shadowOffset + cornerRadius,
+                shadowOffset + cornerRadius,
                 180f,
                 90f,
                 false
@@ -503,6 +540,16 @@ class DebitTypeView @JvmOverloads constructor(
         }
 
         canvas.drawPath(shadowPath, shadowPaint)
+    }
+
+//    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+//        outlineProvider = ShadowOutline()
+//    }
+
+    inner class ShadowOutline : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+            outline?.setRect(0, 0, width, height)
+        }
     }
 }
 

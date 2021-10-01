@@ -33,6 +33,17 @@ class HomepageCards @JvmOverloads constructor(
         const val ARROW = 5
     }
 
+    private enum class TouchType {
+        EXPAND_SAVINGS, EXPAND_PAY_LATER, EXPAND_CRYPTO, UP;
+
+        fun getInt() = when (this) {
+            EXPAND_SAVINGS -> SAVINGS
+            EXPAND_PAY_LATER -> PAY_LATER
+            EXPAND_CRYPTO -> CRYPTO
+            UP -> -1
+        }
+    }
+
     private var requireAnim = false
 
     private val paddingX = 24.dp
@@ -64,13 +75,13 @@ class HomepageCards @JvmOverloads constructor(
                         )
                     }
                     tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 12.dp)
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 16.dp)
                     }
                     tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 4.dp, width / 2f + 12.dp)
+                        animateHorizontalSizeTo(width / 2f - 8.dp, width / 2f + 4.dp)
                     }
                     tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f + 20.dp, width / 2f + 36.dp)
+                        animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (paddingX + cardPadding)) {
@@ -164,13 +175,13 @@ class HomepageCards @JvmOverloads constructor(
                         )
                     }
                     tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 32.dp)
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 36.dp)
                     }
                     tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 24.dp, width / 2f + 12.dp)
+                        animateHorizontalSizeTo(width / 2f - 28.dp, width / 2f + 4.dp)
                     }
                     tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f + 20.dp, width / 2f + 36.dp)
+                        animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (paddingX + (collapsedCardSizeX - bitmapSize) / 2f)) {
@@ -267,13 +278,13 @@ class HomepageCards @JvmOverloads constructor(
                         )
                     }
                     tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 32.dp)
+                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 36.dp)
                     }
                     tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 24.dp, width / 2f - 8.dp)
+                        animateHorizontalSizeTo(width / 2f - 28.dp, width / 2f - 16.dp)
                     }
                     tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f, width / 2f + 36.dp)
+                        animateHorizontalSizeTo(width / 2f - 8, width / 2f + 24.dp)
                     }
                     if (requireAnim) {
                         (bitmapPosition[SAVINGS].x to (-collapsedCardSizeX * .3f + (collapsedCardSizeX - bitmapSize) / 2f)) {
@@ -352,6 +363,7 @@ class HomepageCards @JvmOverloads constructor(
                 }
             }
         }
+    private var touchType: TouchType = TouchType.UP
 
     private val savingsCardBounds =
         RectF(paddingX, 16.dp, paddingX + expandedCardSizeX, cardSizeY + 16.dp)
@@ -577,20 +589,20 @@ class HomepageCards @JvmOverloads constructor(
         tabLayout[SAVINGS]!!.apply {
             left = width / 2f - 48.dp
             top = height - 24.dp
-            right = left + 36.dp
-            bottom = top + 16.dp
+            right = left + 32.dp
+            bottom = top + 12.dp
         }
         tabLayout[PAY_LATER]!!.apply {
             left = tabLayout[SAVINGS]!!.right + 8.dp
             top = height - 24.dp
-            right = left + 16.dp
-            bottom = top + 16.dp
+            right = left + 12.dp
+            bottom = top + 12.dp
         }
         tabLayout[CRYPTO]!!.apply {
             left = tabLayout[PAY_LATER]!!.right + 8.dp
             top = height - 24.dp
-            right = left + 16.dp
-            bottom = top + 16.dp
+            right = left + 12.dp
+            bottom = top + 12.dp
         }
     }
 
@@ -776,12 +788,12 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(payLaterCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = PAY_LATER
+                                touchType = TouchType.EXPAND_PAY_LATER
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = CRYPTO
+                                touchType = TouchType.EXPAND_CRYPTO
                                 return true
                             }
                         }
@@ -790,12 +802,12 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(savingsCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = SAVINGS
+                                touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = CRYPTO
+                                touchType = TouchType.EXPAND_CRYPTO
                                 return true
                             }
                         }
@@ -804,12 +816,12 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(savingsCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = SAVINGS
+                                touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
                             event.clickedIn(payLaterCardBounds) -> {
                                 requireAnim = true
-                                expandedCard = PAY_LATER
+                                touchType = TouchType.EXPAND_PAY_LATER
                                 return true
                             }
                         }
@@ -835,6 +847,10 @@ class HomepageCards @JvmOverloads constructor(
                     return true
                 }
                 return false
+            }
+            MotionEvent.ACTION_UP -> {
+                expandedCard = touchType.getInt()
+                touchType = TouchType.UP
             }
         }
 
@@ -905,8 +921,8 @@ class HomepageCards @JvmOverloads constructor(
             left = cardEnd - cardPadding - 36.dp
             top =
                 (bounds.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top - amountTextBounds.height()) / 2f
-            right = left + size * 1.8f
-            bottom = top + size * 1.2f
+            right = left + size * 1.39f
+            bottom = top + size * .9f
         }
 
         canvas.drawDrawable(resources, R.drawable.ic_eye, eyeRect, alphaPaint)

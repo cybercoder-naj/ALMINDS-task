@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.nishant.customview.ui.TransactionsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/transactionsFragmentParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/transactionsFragmentParent">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transferRecyclerView"
@@ -28,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="56dp"
             android:text="@string/past_transactions"
             android:textColor="#243257"
             android:textSize="24sp"
@@ -41,22 +42,22 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="2dp"
-            app:layout_goneMarginEnd="2dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_past"
             app:layout_constraintBottom_toBottomOf="@id/tvPastTransactions"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvPastTransactions" />
+            app:layout_constraintTop_toTopOf="@id/tvPastTransactions"
+            app:layout_goneMarginEnd="2dp" />
 
         <com.nishant.customview.views.MyEditText
             android:id="@+id/searchBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:hint="@string/search_name_number_or_upi"
-            android:drawableStart="@drawable/ic_search_icon"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
+            android:drawableStart="@drawable/ic_search"
+            android:hint="@string/search_name_number_or_upi"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iconPast" />

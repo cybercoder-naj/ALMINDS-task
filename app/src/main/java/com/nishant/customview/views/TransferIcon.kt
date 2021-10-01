@@ -47,7 +47,7 @@ class TransferIcon @JvmOverloads constructor(
     }
     private val textPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL_AND_STROKE
-        textSize = 14.5f.sp
+        textSize = 14.sp
         typeface = Typeface.DEFAULT
     }
     private val textBounds = Rect()
@@ -55,7 +55,7 @@ class TransferIcon @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val desiredWidth = (context.resources.displayMetrics.widthPixels - 32.dp.toInt()) / 4
-        val desiredHeight = 120.dp.toInt()
+        val desiredHeight = 84.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -90,14 +90,14 @@ class TransferIcon @JvmOverloads constructor(
         }
 
         val iconX = width * .5f
-        val iconR = width * .25f
+        val iconR = width * .3f
         val iconY = iconR + 1.dp
 
         iconRect.apply {
-            left = iconX - iconR + 12.dp
-            top = iconY - iconR + 12.dp
-            right = iconX + iconR - 12.dp
-            bottom = iconY + iconR - 12.dp
+            left = iconX - iconR + 14.dp
+            top = iconY - iconR + 14.dp
+            right = iconX + iconR - 14.dp
+            bottom = iconY + iconR - 14.dp
         }
 
         canvas.drawCircle(iconX, iconY + 2.dp, iconR, shadowPaint)
@@ -116,7 +116,7 @@ class TransferIcon @JvmOverloads constructor(
             canvas.drawText(
                 it,
                 iconX - textBounds.width() / 2f,
-                iconY + iconR + 20.dp + textBounds.height(),
+                height.toFloat(),
                 textPaint
             )
         }
