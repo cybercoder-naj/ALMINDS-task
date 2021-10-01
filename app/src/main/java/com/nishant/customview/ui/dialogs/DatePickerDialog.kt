@@ -13,6 +13,7 @@ class DatePickerDialog : RoundedBottomSheetFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        isCancelable = false
         return inflater.inflate(R.layout.dialog_date_picker, container, false)
     }
 }

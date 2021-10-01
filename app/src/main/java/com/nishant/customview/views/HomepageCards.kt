@@ -785,12 +785,12 @@ class HomepageCards @JvmOverloads constructor(
                 when (expandedCard) {
                     SAVINGS -> {
                         when {
-                            event.clickedIn(payLaterCardBounds) -> {
+                            event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_PAY_LATER
                                 return true
                             }
-                            event.clickedIn(cryptoCardBounds) -> {
+                            event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_CRYPTO
                                 return true
@@ -799,12 +799,12 @@ class HomepageCards @JvmOverloads constructor(
                     }
                     PAY_LATER -> {
                         when {
-                            event.clickedIn(savingsCardBounds) -> {
+                            event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
-                            event.clickedIn(cryptoCardBounds) -> {
+                            event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_CRYPTO
                                 return true
@@ -813,12 +813,12 @@ class HomepageCards @JvmOverloads constructor(
                     }
                     CRYPTO -> {
                         when {
-                            event.clickedIn(savingsCardBounds) -> {
+                            event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_SAVINGS
                                 return true
                             }
-                            event.clickedIn(payLaterCardBounds) -> {
+                            event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
                                 notFirstRender = true
                                 touchType = TouchType.EXPAND_PAY_LATER
                                 return true
