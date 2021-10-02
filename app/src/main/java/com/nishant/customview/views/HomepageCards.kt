@@ -27,19 +27,23 @@ class HomepageCards @JvmOverloads constructor(
         const val PAY_LATER = 1
         const val CRYPTO = 2
 
-        const val TRANSFER = 3
-        const val REQUEST = 4
-        const val ARROW = 5
+        const val TRANSFER = -2
+        const val REQUEST = -3
+        const val ARROW = -4
     }
 
     private enum class TouchType {
-        EXPAND_SAVINGS, EXPAND_PAY_LATER, EXPAND_CRYPTO, UP;
+        SAVINGS_CARD, PAY_LATER_CARD, CRYPTO_CARD, EYE_BUTTON, TRANSFER_BUTTON, REQUEST_BUTTON, ARROW_BUTTON, UP;
 
         fun getInt() = when (this) {
-            EXPAND_SAVINGS -> SAVINGS
-            EXPAND_PAY_LATER -> PAY_LATER
-            EXPAND_CRYPTO -> CRYPTO
-            UP -> -1
+            SAVINGS_CARD -> SAVINGS
+            PAY_LATER_CARD -> PAY_LATER
+            CRYPTO_CARD -> CRYPTO
+            EYE_BUTTON -> -1
+            TRANSFER_BUTTON -> TRANSFER
+            REQUEST_BUTTON -> REQUEST
+            ARROW_BUTTON -> ARROW
+            UP -> -1000
         }
     }
 
@@ -787,12 +791,12 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_PAY_LATER
+                                touchType = TouchType.PAY_LATER_CARD
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_CRYPTO
+                                touchType = TouchType.CRYPTO_CARD
                                 return true
                             }
                         }
@@ -801,12 +805,12 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_SAVINGS
+                                touchType = TouchType.SAVINGS_CARD
                                 return true
                             }
                             event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_CRYPTO
+                                touchType = TouchType.CRYPTO_CARD
                                 return true
                             }
                         }
@@ -815,40 +819,46 @@ class HomepageCards @JvmOverloads constructor(
                         when {
                             event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_SAVINGS
+                                touchType = TouchType.SAVINGS_CARD
                                 return true
                             }
                             event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
                                 notFirstRender = true
-                                touchType = TouchType.EXPAND_PAY_LATER
+                                touchType = TouchType.PAY_LATER_CARD
                                 return true
                             }
                         }
                     }
                 }
                 if (expandedEyeRect.first == expandedCard && event.clickedIn(expandedEyeRect.second)) {
-                    showAmount[expandedCard] = !showAmount[expandedCard]
-                    invalidate()
+                    touchType = TouchType.EYE_BUTTON
                     return true
                 }
                 if (expandedArrowRect.first == expandedCard && event.clickedIn(expandedArrowRect.second)) {
-                    onClickListeners(expandedCard, ARROW)
+                    touchType = TouchType.ARROW_BUTTON
                     return true
                 }
                 if (expandedTransferRect.first == expandedCard
                     && event.clickedIn(expandedTransferRect.second)
                 ) {
-                    onClickListeners(expandedCard, TRANSFER)
+                    touchType = TouchType.TRANSFER_BUTTON
                     return true
                 }
                 if (expandedRequestRect.first == expandedCard && event.clickedIn(expandedRequestRect.second)) {
-                    onClickListeners(expandedCard, REQUEST)
+                    touchType = TouchType.REQUEST_BUTTON
                     return true
                 }
                 return false
             }
             MotionEvent.ACTION_UP -> {
-                expandedCard = touchType.getInt()
+                when (touchType) {
+                    TouchType.SAVINGS_CARD, TouchType.PAY_LATER_CARD, TouchType.CRYPTO_CARD ->
+                        expandedCard = touchType.getInt()
+                    TouchType.EYE_BUTTON -> showAmount[expandedCard] = !showAmount[expandedCard]
+                    TouchType.TRANSFER_BUTTON, TouchType.REQUEST_BUTTON, TouchType.ARROW_BUTTON ->
+                        onClickListeners(expandedCard, touchType.getInt())
+                    TouchType.UP -> Unit
+                }
                 touchType = TouchType.UP
                 invalidate()
             }
