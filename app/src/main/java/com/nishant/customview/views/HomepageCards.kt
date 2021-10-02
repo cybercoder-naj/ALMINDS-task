@@ -27,9 +27,9 @@ class HomepageCards @JvmOverloads constructor(
         const val PAY_LATER = 1
         const val CRYPTO = 2
 
-        const val TRANSFER = -2
-        const val REQUEST = -3
-        const val ARROW = -4
+        const val TRANSFER = 3
+        const val REQUEST = 4
+        const val ARROW = 5
     }
 
     private enum class TouchType {
@@ -768,14 +768,14 @@ class HomepageCards @JvmOverloads constructor(
         with(canvas) {
             drawRoundRect(
                 bounds.apply { offset(0f, 4.dp) },
-                36.dp,
-                36.dp,
+                32.dp,
+                32.dp,
                 shadowPaint
             )
             drawRoundRect(
                 bounds.apply { offset(0f, (-4).dp) },
-                36.dp,
-                36.dp,
+                32.dp,
+                32.dp,
                 paint
             )
         }

@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".DemoFragment"
+    tools:context=".ui.fragments.DemoFragment"
     android:orientation="vertical">
 
     <com.nishant.customview.views.HomepageCards
+        android:id="@+id/homepageCards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
