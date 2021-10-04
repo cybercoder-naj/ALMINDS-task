@@ -1,9 +1,12 @@
 package com.nishant.customview.views
 
+import android.animation.TypeEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
@@ -22,6 +25,7 @@ class HomepageCards @JvmOverloads constructor(
 
     companion object {
         private const val TAG = "HomepageCards"
+        private const val ANIMATION_DURATION = 300L
 
         const val SAVINGS = 0
         const val PAY_LATER = 1
@@ -47,439 +51,12 @@ class HomepageCards @JvmOverloads constructor(
         }
     }
 
-    private var notFirstRender = false
-
-    private val paddingX = 24.dp
-    private val cardGap = 12.dp
-    private val expandedCardSizeX = 248.dp
-    private val collapsedCardSizeX = 72.dp
-    private val cardSizeY = 300.dp
-    private val bitmapSize = 42.dp
-    private val cardPadding = 24.dp
-
-    private var expandedCard = SAVINGS
-        set(value) {
-            field = value
-            when (value) {
-                SAVINGS -> {
-                    savingsCardBounds.apply {
-                        animateHorizontalSizeTo(paddingX, paddingX + expandedCardSizeX)
-                    }
-                    payLaterCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            paddingX + expandedCardSizeX + cardGap,
-                            paddingX + expandedCardSizeX + cardGap + collapsedCardSizeX
-                        )
-                    }
-                    cryptoCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX,
-                            paddingX + expandedCardSizeX + 2 * (cardGap + collapsedCardSizeX)
-                        )
-                    }
-                    tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 16.dp)
-                    }
-                    tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 8.dp, width / 2f + 4.dp)
-                    }
-                    tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
-                    }
-                    if (notFirstRender) {
-                        (bitmapPosition[SAVINGS].x to (paddingX + cardPadding)) {
-                            bitmapPosition[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[SAVINGS].y to (cardPadding + cardSizeY * .075f)) {
-                            bitmapPosition[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].x to (paddingX + expandedCardSizeX + cardGap + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].x to (paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (headTextRotation[SAVINGS] to 0f) {
-                            headTextRotation[SAVINGS] = it
-                            invalidate()
-                        }
-                        (headTextRotation[PAY_LATER] to 90f) {
-                            headTextRotation[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (headTextRotation[CRYPTO] to 90f) {
-                            headTextRotation[CRYPTO] = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].x to 0f) {
-                            headTextTranslation[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].y to 0f) {
-                            headTextTranslation[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].x to 64.dp) {
-                            headTextTranslation[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].y to 56.dp) {
-                            headTextTranslation[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].x to 64.dp) {
-                            headTextTranslation[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].y to 48.dp) {
-                            headTextTranslation[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (alphaProps[SAVINGS] to 255) {
-                            alphaProps[SAVINGS] = it
-                            invalidate()
-                        }
-                        (alphaProps[PAY_LATER] to 0) {
-                            alphaProps[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (alphaProps[CRYPTO] to 0) {
-                            alphaProps[CRYPTO] = it
-                            invalidate()
-                        }
-                    }
-                }
-                PAY_LATER -> {
-                    savingsCardBounds.apply {
-                        animateHorizontalSizeTo(paddingX, paddingX + collapsedCardSizeX)
-                    }
-                    payLaterCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            paddingX + collapsedCardSizeX + cardGap,
-                            paddingX + collapsedCardSizeX + cardGap + expandedCardSizeX
-                        )
-                    }
-                    cryptoCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            paddingX + collapsedCardSizeX + 2 * cardGap + expandedCardSizeX,
-                            paddingX + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX
-                        )
-                    }
-                    tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 36.dp)
-                    }
-                    tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 28.dp, width / 2f + 4.dp)
-                    }
-                    tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f + 12.dp, width / 2f + 24.dp)
-                    }
-                    if (notFirstRender) {
-                        (bitmapPosition[SAVINGS].x to (paddingX + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[SAVINGS].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].x to (paddingX + collapsedCardSizeX + cardGap + cardPadding)) {
-                            bitmapPosition[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].y to (cardPadding + cardSizeY * .075f)) {
-                            bitmapPosition[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].x to (paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (headTextRotation[SAVINGS] to 90f) {
-                            headTextRotation[SAVINGS] = it
-                            invalidate()
-                        }
-                        (headTextRotation[PAY_LATER] to 0f) {
-                            headTextRotation[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (headTextRotation[CRYPTO] to 90f) {
-                            headTextRotation[CRYPTO] = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].x to 64.dp) {
-                            headTextTranslation[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].y to 48.dp) {
-                            headTextTranslation[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].x to 0f) {
-                            headTextTranslation[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].y to 0f) {
-                            headTextTranslation[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].x to 64.dp) {
-                            headTextTranslation[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].y to 48.dp) {
-                            headTextTranslation[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (alphaProps[SAVINGS] to 0) {
-                            alphaProps[SAVINGS] = it
-                            invalidate()
-                        }
-                        (alphaProps[PAY_LATER] to 255) {
-                            alphaProps[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (alphaProps[CRYPTO] to 0) {
-                            alphaProps[CRYPTO] = it
-                            invalidate()
-                        }
-                    }
-                }
-                CRYPTO -> {
-                    savingsCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            -collapsedCardSizeX * .3f,
-                            -collapsedCardSizeX * .3f + collapsedCardSizeX
-                        )
-                    }
-                    payLaterCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            -collapsedCardSizeX * .3f + collapsedCardSizeX + cardGap,
-                            -collapsedCardSizeX * .3f + 2 * collapsedCardSizeX + cardGap
-                        )
-                    }
-                    cryptoCardBounds.apply {
-                        animateHorizontalSizeTo(
-                            -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap),
-                            -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX
-                        )
-                    }
-                    tabLayout[SAVINGS]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 48.dp, width / 2f - 36.dp)
-                    }
-                    tabLayout[PAY_LATER]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 28.dp, width / 2f - 16.dp)
-                    }
-                    tabLayout[CRYPTO]!!.apply {
-                        animateHorizontalSizeTo(width / 2f - 8, width / 2f + 24.dp)
-                    }
-                    if (notFirstRender) {
-                        (bitmapPosition[SAVINGS].x to (-collapsedCardSizeX * .3f + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[SAVINGS].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].x to (-collapsedCardSizeX * .3f + collapsedCardSizeX + cardGap + (collapsedCardSizeX - bitmapSize) / 2f)) {
-                            bitmapPosition[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[PAY_LATER].y to (cardPadding + cardSizeY * .15f)) {
-                            bitmapPosition[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].x to (-collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap) + cardPadding)) {
-                            bitmapPosition[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (bitmapPosition[CRYPTO].y to (cardPadding + cardSizeY * .075f)) {
-                            bitmapPosition[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (headTextRotation[SAVINGS] to 90f) {
-                            headTextRotation[SAVINGS] = it
-                            invalidate()
-                        }
-                        (headTextRotation[PAY_LATER] to 90f) {
-                            headTextRotation[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (headTextRotation[CRYPTO] to 0f) {
-                            headTextRotation[CRYPTO] = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].x to 64.dp) {
-                            headTextTranslation[SAVINGS].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[SAVINGS].y to 48.dp) {
-                            headTextTranslation[SAVINGS].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].x to 64.dp) {
-                            headTextTranslation[PAY_LATER].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[PAY_LATER].y to 56.dp) {
-                            headTextTranslation[PAY_LATER].y = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].x to 0f) {
-                            headTextTranslation[CRYPTO].x = it
-                            invalidate()
-                        }
-                        (headTextTranslation[CRYPTO].y to 0f) {
-                            headTextTranslation[CRYPTO].y = it
-                            invalidate()
-                        }
-                        (alphaProps[SAVINGS] to 0) {
-                            alphaProps[SAVINGS] = it
-                            invalidate()
-                        }
-                        (alphaProps[PAY_LATER] to 0) {
-                            alphaProps[PAY_LATER] = it
-                            invalidate()
-                        }
-                        (alphaProps[CRYPTO] to 255) {
-                            alphaProps[CRYPTO] = it
-                            invalidate()
-                        }
-                    }
-                }
-            }
-        }
-    private var touchType: TouchType = TouchType.UP
-
-    private val savingsCardBounds =
-        RectF(paddingX, 16.dp, paddingX + expandedCardSizeX, cardSizeY + 16.dp)
-    private val payLaterCardBounds = RectF(
-        paddingX + expandedCardSizeX + cardGap, 16.dp,
-        paddingX + expandedCardSizeX + cardGap + collapsedCardSizeX, cardSizeY + 16.dp
-    )
-    private val cryptoCardBounds = RectF(
-        paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX, 16.dp,
-        paddingX + expandedCardSizeX + 2 * (cardGap + collapsedCardSizeX), cardSizeY + 16.dp
-    )
-    private val bitmapRect = RectF()
-    private val headingTextBounds = Rect()
-    private val buttonTextBounds = Rect()
-    private val transferButtonRect = RectF()
-    private val diagonalArrowRect = RectF()
-    private val eyeRect = RectF()
-    private val amountTextBounds = Rect()
-
-    private var expandedArrowRect = Pair(-1, RectF())
-    private var expandedEyeRect = Pair(-1, RectF())
-    private var expandedTransferRect = Pair(-1, RectF())
-    private var expandedRequestRect = Pair(-1, RectF())
-
-    private var tabLayout = mapOf(
-        SAVINGS to RectF(),
-        PAY_LATER to RectF(),
-        CRYPTO to RectF()
-    )
-
-    private val bitmapPosition = Array(3) {
-        when (it) {
-            SAVINGS -> PointF(paddingX + cardPadding, cardPadding + cardSizeY * .075f)
-            PAY_LATER -> PointF(
-                paddingX + expandedCardSizeX + cardGap + (collapsedCardSizeX - bitmapSize) / 2f,
-                cardPadding + cardSizeY * .15f
-            )
-            CRYPTO -> PointF(
-                paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX + (collapsedCardSizeX - bitmapSize) / 2f,
-                cardPadding + cardSizeY * .15f
-            )
-            else -> PointF()
-        }
+    private val headingTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        style = Style.FILL_AND_STROKE
+        color = Color.WHITE
+        typeface = Typeface.DEFAULT_BOLD
+        textSize = 18.sp
     }
-    private val headTextRotation = Array(3) {
-        when (it) {
-            SAVINGS -> 0f
-            else -> 90f
-        }
-    }
-    private val headTextTranslation = Array(3) {
-        when (it) {
-            SAVINGS -> PointF(0f, 0f)
-            PAY_LATER -> PointF(64.dp, 56.dp)
-            CRYPTO -> PointF(64.dp, 48.dp)
-            else -> PointF()
-        }
-    }
-    private val alphaProps = Array(3) {
-        when (it) {
-            SAVINGS -> 255
-            else -> 0
-        }
-    }
-
-    @DrawableRes
-    private val requestArrow = Array(3) {
-        when (it) {
-            SAVINGS -> R.drawable.ic_diagonal_arrow_blue
-            PAY_LATER -> R.drawable.ic_diagonal_arrow_pink
-            CRYPTO -> R.drawable.ic_diagonal_arrow_green
-            else -> R.drawable.ic_diagonal_arrow_blue
-        }
-    }
-
-    @DrawableRes
-    private val bitmapResource = Array(3) {
-        when (it) {
-            SAVINGS -> R.drawable.ic_piggy_bank
-            PAY_LATER -> R.drawable.ic_wallet
-            CRYPTO -> R.drawable.ic_crypto
-            else -> 0
-        }
-    }
-    private val heading = Array(3) {
-        when (it) {
-            SAVINGS -> "Savings Account"
-            PAY_LATER -> "Pay Later Account"
-            CRYPTO -> "Crypto Account"
-            else -> ""
-        }
-    }
-
-    @ColorInt
-    private val bgArrowColor = IntArray(3) {
-        when (it) {
-            SAVINGS -> Color.parseColor("#3B96FF")
-            PAY_LATER -> Color.parseColor("#CF1C50")
-            CRYPTO -> Color.parseColor("#25C1B8")
-            else -> Color.WHITE
-        }
-    }
-
-    @ColorInt
-    private val bgCardColor = IntArray(3) {
-        when (it) {
-            SAVINGS -> Color.parseColor("#1B79E6")
-            PAY_LATER -> Color.parseColor("#FF4077")
-            CRYPTO -> Color.parseColor("#37D8CF")
-            else -> Color.WHITE
-        }
-    }
-
     private val cardPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.FILL
     }
@@ -496,12 +73,6 @@ class HomepageCards @JvmOverloads constructor(
         color = Color.WHITE
         strokeWidth = 2.dp
         strokeCap = Cap.ROUND
-    }
-    private val headingTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
-        style = Style.FILL_AND_STROKE
-        color = Color.WHITE
-        typeface = Typeface.DEFAULT_BOLD
-        textSize = 18.sp
     }
     private val buttonTextPaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.FILL_AND_STROKE
@@ -533,12 +104,237 @@ class HomepageCards @JvmOverloads constructor(
     }
     private val alphaPaint = Paint()
 
+    private val paddingX = 24.dp
+    private val cardGap = 12.dp
+    private val expandedCardSizeX = 248.dp
+    private val collapsedCardSizeX = 72.dp
+    private val cardSizeY = 300.dp
+    private val bitmapSize = 42.dp
+    private val cardPadding = 24.dp
+
+    private val cardBounds = Array(3) { i ->
+        return@Array Array(3) { j ->
+            when (i) {
+                SAVINGS -> {
+                    when (j) {
+                        SAVINGS -> RectF(
+                            paddingX,
+                            16.dp,
+                            paddingX + expandedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        PAY_LATER -> RectF(
+                            paddingX + expandedCardSizeX + cardGap,
+                            16.dp,
+                            paddingX + expandedCardSizeX + cardGap + collapsedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        CRYPTO -> RectF(
+                            paddingX + expandedCardSizeX + 2 * cardGap + collapsedCardSizeX,
+                            16.dp,
+                            paddingX + expandedCardSizeX + 2 * (cardGap + collapsedCardSizeX),
+                            cardSizeY + 16.dp
+                        )
+                        else -> RectF()
+                    }
+                }
+                PAY_LATER -> {
+                    when (j) {
+                        SAVINGS -> RectF(
+                            paddingX,
+                            16.dp,
+                            paddingX + collapsedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        PAY_LATER -> RectF(
+                            paddingX + collapsedCardSizeX + cardGap,
+                            16.dp,
+                            paddingX + collapsedCardSizeX + cardGap + expandedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        CRYPTO -> RectF(
+                            paddingX + collapsedCardSizeX + 2 * cardGap + expandedCardSizeX,
+                            16.dp,
+                            paddingX + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        else -> RectF()
+                    }
+                }
+                CRYPTO -> {
+                    when (j) {
+                        SAVINGS -> RectF(
+                            -collapsedCardSizeX * .3f,
+                            16.dp,
+                            -collapsedCardSizeX * .3f + collapsedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        PAY_LATER -> RectF(
+                            -collapsedCardSizeX * .3f + collapsedCardSizeX + cardGap,
+                            16.dp,
+                            -collapsedCardSizeX * .3f + 2 * collapsedCardSizeX + cardGap,
+                            cardSizeY + 16.dp
+                        )
+                        CRYPTO -> RectF(
+                            -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap),
+                            16.dp,
+                            -collapsedCardSizeX * .3f + 2 * (collapsedCardSizeX + cardGap) + expandedCardSizeX,
+                            cardSizeY + 16.dp
+                        )
+                        else -> RectF()
+                    }
+                }
+                else -> RectF()
+            }
+        }
+    }
+    private val bitmapPosition = Array(3) { i ->
+        Array(3) { j ->
+            if (i == j)
+                PointF(cardBounds[i][j].left + cardPadding, cardPadding + cardSizeY * .075f)
+            else
+                PointF(
+                    cardBounds[i][j].left + (collapsedCardSizeX - bitmapSize) / 2f,
+                    cardPadding + cardSizeY * .15f
+                )
+        }
+    }
+    private val bitmapRect = Array(3) { i ->
+        Array(3) { j ->
+            RectF().apply {
+                left = bitmapPosition[i][j].x
+                top = bitmapPosition[i][j].y
+                right = left + bitmapSize
+                bottom = top + bitmapSize
+            }
+        }
+    }
+    private val heading = Array(3) {
+        when (it) {
+            SAVINGS -> "Savings Account"
+            PAY_LATER -> "Pay Later Account"
+            CRYPTO -> "Crypto Account"
+            else -> ""
+        }
+    }
+    private val headingBounds = Array(3) {
+        Rect().apply {
+            headingTextPaint.getTextBounds(heading[it], 0, heading[it].length, this)
+        }
+    }
+    private val headingRotation = Array(3) { i ->
+        Array(3) { j ->
+            if (i == j) 0f else 90f
+        }
+    }
+    private val headingPosition = Array(3) { i ->
+        Array(3) { j ->
+            if (i == j)
+                PointF(
+                    bitmapRect[i][j].left,
+                    bitmapRect[i][j].bottom + 16.dp + headingBounds[j].height()
+                )
+            else
+                PointF(
+                    (cardBounds[i][j].left + cardBounds[i][j].right + headingBounds[j].height()) / 2f,
+                    bitmapRect[i][j].bottom + 16.dp + headingBounds[j].width()
+                )
+        }
+    }
+    private val alphaProps = Array(3) { i ->
+        Array(3) { j ->
+            if (i == j) 255 else 0
+        }
+    }
+    private val tabLayout = Array(3) {
+        Array(3) {
+            RectF()
+        }
+    }
+
+    private val cCardBounds = Array(3) { RectF().apply { set(cardBounds[SAVINGS][it]) } }
+    private val cBitmapRect = Array(3) { RectF().apply { set(bitmapRect[SAVINGS][it]) } }
+    private val cHeadingRotation = Array(3) { headingRotation[SAVINGS][it] }
+    private val cHeadingPosition = Array(3) { PointF().apply { set(headingPosition[SAVINGS][it]) } }
+    private val cAlphaProps = Array(3) { alphaProps[SAVINGS][it] }
+    private val cTabLayout = Array(3) { RectF().apply { set(tabLayout[SAVINGS][it]) } }
+
+    private var notFirstRender = false
+
+    private var expandedCard = SAVINGS
+        set(value) {
+            (cCardBounds to cardBounds[value])()
+            (cBitmapRect to bitmapRect[value])()
+            (cHeadingRotation to headingRotation[value])()
+            (cHeadingPosition to headingPosition[value])()
+            (cAlphaProps to alphaProps[value])()
+            (cTabLayout to tabLayout[value])()
+
+            field = value
+            invalidate()
+        }
+
+    private var touchType: TouchType = TouchType.UP
+
+    private val buttonTextBounds = Rect()
+    private val transferButtonRect = RectF()
+    private val diagonalArrowRect = RectF()
+    private val eyeRect = RectF()
+    private val amountTextBounds = Rect()
+
+    private var expandedArrowRect = Pair(-1, RectF())
+    private var expandedEyeRect = Pair(-1, RectF())
+    private var expandedTransferRect = Pair(-1, RectF())
+    private var expandedRequestRect = Pair(-1, RectF())
+
+    @DrawableRes
+    private val requestArrow = Array(3) {
+        when (it) {
+            SAVINGS -> R.drawable.ic_diagonal_arrow_blue
+            PAY_LATER -> R.drawable.ic_diagonal_arrow_pink
+            CRYPTO -> R.drawable.ic_diagonal_arrow_green
+            else -> R.drawable.ic_diagonal_arrow_blue
+        }
+    }
+
+    @DrawableRes
+    private val bitmapResource = Array(3) {
+        when (it) {
+            SAVINGS -> R.drawable.ic_piggy_bank
+            PAY_LATER -> R.drawable.ic_wallet
+            CRYPTO -> R.drawable.ic_crypto
+            else -> 0
+        }
+    }
+
+    @ColorInt
+    private val bgArrowColor = IntArray(3) {
+        when (it) {
+            SAVINGS -> Color.parseColor("#3B96FF")
+            PAY_LATER -> Color.parseColor("#CF1C50")
+            CRYPTO -> Color.parseColor("#25C1B8")
+            else -> Color.WHITE
+        }
+    }
+
+    @ColorInt
+    private val bgCardColor = IntArray(3) {
+        when (it) {
+            SAVINGS -> Color.parseColor("#1B79E6")
+            PAY_LATER -> Color.parseColor("#FF4077")
+            CRYPTO -> Color.parseColor("#37D8CF")
+            else -> Color.WHITE
+        }
+    }
+
     var amount: FloatArray = FloatArray(3)
         set(value) {
             field = value.map { round(it * 100f) / 100f }.toFloatArray()
             invalidate()
         }
-    var onClickListeners: (expandedCard: Int, buttonType: Int) -> Unit = { _, _ -> }
+    var onClickListeners: (expandedCard: Int, buttonType: Int) -> Unit = { _, _ ->
+        Log.w(TAG, "onClickListeners: Not yet initialised")
+    }
 
     private var showAmount = BooleanArray(3)
         set(value) {
@@ -549,12 +345,11 @@ class HomepageCards @JvmOverloads constructor(
         get() = amount.map { it.toString() }.toTypedArray()
 
     init {
-        expandedCard = SAVINGS
         amount = floatArrayOf(100.0f, 1432.532f, 913941f)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 420.dp.toInt()
+        val desiredWidth = context.resources.displayMetrics.widthPixels
         val desiredHeight = 356.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
@@ -589,78 +384,98 @@ class HomepageCards @JvmOverloads constructor(
     }
 
     private fun initTabRectF() {
-        tabLayout[SAVINGS]!!.apply {
-            left = width / 2f - 48.dp
-            top = height - 24.dp
-            right = left + 32.dp
-            bottom = top + 12.dp
+        tabLayout[SAVINGS].apply {
+            with(this[SAVINGS]) {
+                left = width / 2f - 48.dp
+                top = height - 24.dp
+                right = left + 32.dp
+                bottom = top + 12.dp
+            }
+            with(this[PAY_LATER]) {
+                left = this@apply[SAVINGS].right + 8.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
+            with(this[CRYPTO]) {
+                left = this@apply[PAY_LATER].right + 8.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
         }
-        tabLayout[PAY_LATER]!!.apply {
-            left = tabLayout[SAVINGS]!!.right + 8.dp
-            top = height - 24.dp
-            right = left + 12.dp
-            bottom = top + 12.dp
+        tabLayout[PAY_LATER].apply {
+            with(this[SAVINGS]) {
+                left = width / 2f - 48.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
+            with(this[PAY_LATER]) {
+                left = this@apply[SAVINGS].right + 8.dp
+                top = height - 24.dp
+                right = left + 32.dp
+                bottom = top + 12.dp
+            }
+            with(this[CRYPTO]) {
+                left = this@apply[PAY_LATER].right + 8.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
         }
-        tabLayout[CRYPTO]!!.apply {
-            left = tabLayout[PAY_LATER]!!.right + 8.dp
-            top = height - 24.dp
-            right = left + 12.dp
-            bottom = top + 12.dp
+        tabLayout[CRYPTO].apply {
+            with(this[SAVINGS]) {
+                left = width / 2f - 48.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
+            with(this[PAY_LATER]) {
+                left = this@apply[SAVINGS].right + 8.dp
+                top = height - 24.dp
+                right = left + 12.dp
+                bottom = top + 12.dp
+            }
+            with(this[CRYPTO]) {
+                left = this@apply[PAY_LATER].right + 8.dp
+                top = height - 24.dp
+                right = left + 32.dp
+                bottom = top + 12.dp
+            }
         }
     }
 
     private fun drawAllCards(canvas: Canvas) {
         for (card in 0 until 3) {
-            alphaPaint.alpha = alphaProps[card]
-            val cardBounds = when (card) {
-                SAVINGS -> savingsCardBounds
-                PAY_LATER -> payLaterCardBounds
-                CRYPTO -> cryptoCardBounds
-                else -> RectF()
-            }
+            // Defining variables to be used
+            alphaPaint.alpha = cAlphaProps[card]
             cardPaint.color = bgCardColor[card]
-            drawCard(canvas, cardBounds, cardPaint)
-            bitmapRect.apply {
-                left = bitmapPosition[card].x
-                top = bitmapPosition[card].y
-                right = left + bitmapSize
-                bottom = top + bitmapSize
-            }
-            canvas.drawDrawable(resources, bitmapResource[card], bitmapRect)
-            headingTextPaint.getTextBounds(
-                heading[card],
-                0,
-                heading[card].length,
-                headingTextBounds
-            )
-            canvas.rotate(
-                -headTextRotation[card],
-                bitmapRect.left + headingTextBounds.width() / 2f,
-                bitmapRect.bottom + 16.dp + headingTextBounds.height() / 2f
-            )
-            canvas.translate(-headTextTranslation[card].x, -headTextTranslation[card].y)
+            drawCard(canvas, cCardBounds[card], cardPaint)
+            canvas.drawDrawable(resources, bitmapResource[card], cBitmapRect[card])
+
+            // Writing the heading text with rotation
+            canvas.rotate(-cHeadingRotation[card])
+            cHeadingPosition[card].transformPointWithRotation(cHeadingRotation[card])
             canvas.drawText(
                 heading[card],
-                bitmapRect.left,
-                bitmapRect.bottom + 16.dp + headingTextBounds.height(),
+                cHeadingPosition[card].x,
+                cHeadingPosition[card].y,
                 headingTextPaint
             )
-            canvas.translate(headTextTranslation[card].x, headTextTranslation[card].y)
-            canvas.rotate(
-                headTextRotation[card],
-                bitmapRect.left + headingTextBounds.width() / 2f,
-                bitmapRect.bottom + 16.dp + headingTextBounds.height() / 2f
-            )
+            cHeadingPosition[card].transformPointWithRotation(-cHeadingRotation[card])
+            canvas.rotate(cHeadingRotation[card])
+
             drawArrowWithBackground(
                 canvas,
                 bgArrowColor[card],
-                cardBounds.right,
-                bitmapRect,
+                cCardBounds[card].right,
+                cBitmapRect[card],
                 card
             )
             buttonTextPaint.getTextBounds("Transfer", 0, 8, buttonTextBounds)
             transferButtonRect.apply {
-                left = bitmapRect.left
+                left = cBitmapRect[card].left
                 top = cardSizeY - buttonTextBounds.height() - 68.dp
                 right = left + 100.dp
                 bottom = top + 56.dp
@@ -670,7 +485,7 @@ class HomepageCards @JvmOverloads constructor(
                 36.dp,
                 36.dp,
                 transferButtonPaint.apply {
-                    alpha = alphaProps[card]
+                    alpha = cAlphaProps[card]
                 }
             )
 
@@ -682,7 +497,7 @@ class HomepageCards @JvmOverloads constructor(
                 transferButtonRect.centerX() - buttonTextBounds.width() / 2f,
                 transferButtonRect.bottom + 8.dp + buttonTextBounds.height(),
                 buttonTextPaint.apply {
-                    alpha = alphaProps[card]
+                    alpha = cAlphaProps[card]
                 }
             )
             diagonalArrowRect.apply {
@@ -693,7 +508,7 @@ class HomepageCards @JvmOverloads constructor(
             }
             canvas.drawDrawable(
                 resources,
-                R.drawable.ic_diagonal_arrow_black,
+                R.drawable.ic_diagonal_arrow_up,
                 diagonalArrowRect,
                 alphaPaint
             )
@@ -705,7 +520,7 @@ class HomepageCards @JvmOverloads constructor(
                 transferButtonRect.centerX() - buttonTextBounds.width() / 2f,
                 transferButtonRect.bottom + 8.dp + buttonTextBounds.height(),
                 buttonTextPaint.apply {
-                    alpha = alphaProps[card]
+                    alpha = cAlphaProps[card]
                 }
             )
             diagonalArrowRect.apply {
@@ -739,17 +554,17 @@ class HomepageCards @JvmOverloads constructor(
             amountTextPaint.getTextBounds("\u20B9$amountText", 0, 1, amountTextBounds)
             canvas.drawText(
                 "\u20B9$amountText",
-                bitmapRect.left,
-                (bitmapRect.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top + amountTextBounds.height()) / 2f,
+                cBitmapRect[card].left,
+                (cBitmapRect[card].bottom + 16.dp + headingBounds[card].height() + transferButtonRect.top + amountTextBounds.height()) / 2f,
                 amountTextPaint.apply {
-                    alpha = alphaProps[card]
+                    alpha = cAlphaProps[card]
                 }
             )
             drawEye(
                 canvas,
                 showAmount[card],
-                cardBounds.right,
-                bitmapRect,
+                cCardBounds[card].right,
+                cBitmapRect[card],
                 amountTextBounds.height().toFloat(),
                 card
             )
@@ -758,7 +573,7 @@ class HomepageCards @JvmOverloads constructor(
 
     private fun drawTabIndicator(canvas: Canvas) {
         for (card in 0..2) {
-            canvas.drawRoundRect(tabLayout[card]!!, 16.dp, 16.dp, tabPaint.apply {
+            canvas.drawRoundRect(cTabLayout[card], 16.dp, 16.dp, tabPaint.apply {
                 color = if (card == expandedCard) bgCardColor[card] else Color.parseColor("#E2E2E2")
             })
         }
@@ -786,16 +601,17 @@ class HomepageCards @JvmOverloads constructor(
 
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
+                notFirstRender = true
                 when (expandedCard) {
                     SAVINGS -> {
                         when {
-                            event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[PAY_LATER]) || event.clickedIn(
+                                cTabLayout[PAY_LATER]
+                            ) -> {
                                 touchType = TouchType.PAY_LATER_CARD
                                 return true
                             }
-                            event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[CRYPTO]) || event.clickedIn(cTabLayout[CRYPTO]) -> {
                                 touchType = TouchType.CRYPTO_CARD
                                 return true
                             }
@@ -803,13 +619,13 @@ class HomepageCards @JvmOverloads constructor(
                     }
                     PAY_LATER -> {
                         when {
-                            event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[SAVINGS]) || event.clickedIn(
+                                cTabLayout[SAVINGS]
+                            ) -> {
                                 touchType = TouchType.SAVINGS_CARD
                                 return true
                             }
-                            event.clickedIn(cryptoCardBounds) || event.clickedIn(tabLayout[CRYPTO]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[CRYPTO]) || event.clickedIn(cTabLayout[CRYPTO]) -> {
                                 touchType = TouchType.CRYPTO_CARD
                                 return true
                             }
@@ -817,13 +633,15 @@ class HomepageCards @JvmOverloads constructor(
                     }
                     CRYPTO -> {
                         when {
-                            event.clickedIn(savingsCardBounds) || event.clickedIn(tabLayout[SAVINGS]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[SAVINGS]) || event.clickedIn(
+                                cTabLayout[SAVINGS]
+                            ) -> {
                                 touchType = TouchType.SAVINGS_CARD
                                 return true
                             }
-                            event.clickedIn(payLaterCardBounds) || event.clickedIn(tabLayout[PAY_LATER]!!) -> {
-                                notFirstRender = true
+                            event.clickedIn(cCardBounds[PAY_LATER]) || event.clickedIn(
+                                cTabLayout[PAY_LATER]
+                            ) -> {
                                 touchType = TouchType.PAY_LATER_CARD
                                 return true
                             }
@@ -851,36 +669,27 @@ class HomepageCards @JvmOverloads constructor(
                 return false
             }
             MotionEvent.ACTION_UP -> {
-                when (touchType) {
-                    TouchType.SAVINGS_CARD, TouchType.PAY_LATER_CARD, TouchType.CRYPTO_CARD ->
-                        expandedCard = touchType.getInt()
-                    TouchType.EYE_BUTTON -> showAmount[expandedCard] = !showAmount[expandedCard]
-                    TouchType.TRANSFER_BUTTON, TouchType.REQUEST_BUTTON, TouchType.ARROW_BUTTON ->
-                        onClickListeners(expandedCard, touchType.getInt())
-                    TouchType.UP -> Unit
-                }
-                touchType = TouchType.UP
-                invalidate()
+                performClick()
             }
         }
 
         return value
     }
 
-    private fun RectF.animateHorizontalSizeTo(newLeft: Float, newRight: Float) {
-        if (notFirstRender) {
-            (left to newLeft) {
-                left = it
-                invalidate()
-            }
-            (right to newRight) {
-                right = it
-                invalidate()
-            }
-        } else {
-            left = newLeft
-            right = newRight
+    override fun performClick(): Boolean {
+        super.performClick()
+
+        when (touchType) {
+            TouchType.SAVINGS_CARD, TouchType.PAY_LATER_CARD, TouchType.CRYPTO_CARD ->
+                expandedCard = touchType.getInt()
+            TouchType.EYE_BUTTON -> showAmount[expandedCard] = !showAmount[expandedCard]
+            TouchType.TRANSFER_BUTTON, TouchType.REQUEST_BUTTON, TouchType.ARROW_BUTTON ->
+                onClickListeners(expandedCard, touchType.getInt())
+            TouchType.UP -> Unit
         }
+        touchType = TouchType.UP
+
+        return true
     }
 
     private fun drawArrowWithBackground(
@@ -901,8 +710,8 @@ class HomepageCards @JvmOverloads constructor(
             expandedArrowRect = expandedCard to expandedArrowRect.second.apply { set(bounds) }
         bounds.offsetTo(originalLeft, bounds.top)
 
-        bgArrowPaint.alpha = alphaProps[index]
-        arrowPaint.alpha = alphaProps[index]
+        bgArrowPaint.alpha = cAlphaProps[index]
+        arrowPaint.alpha = cAlphaProps[index]
         canvas.drawCircle(
             cx,
             cy,
@@ -930,7 +739,7 @@ class HomepageCards @JvmOverloads constructor(
         eyeRect.apply {
             left = cardEnd - cardPadding - 36.dp
             top =
-                (bounds.bottom + 16.dp + headingTextBounds.height() + transferButtonRect.top - amountTextBounds.height()) / 2f
+                (bounds.bottom + 16.dp + headingBounds[index].height() + transferButtonRect.top - amountTextBounds.height()) / 2f
             right = left + size * 1.39f
             bottom = top + size * .9f
         }
@@ -947,9 +756,101 @@ class HomepageCards @JvmOverloads constructor(
                 eyeRect.right,
                 eyeRect.bottom,
                 eyeCrossPaint.apply {
-                    alpha = alphaProps[index]
+                    alpha = cAlphaProps[index]
                 }
             )
+        }
+    }
+
+    @JvmName("invokeArrayRectF")
+    private operator fun Pair<Array<RectF>, Array<RectF>>.invoke() {
+        val evaluator =
+            TypeEvaluator<Array<RectF>> { t, r1, r2 ->
+                Array(3) {
+                    RectF(
+                        r1[it].left + t * (r2[it].left - r1[it].left),
+                        r1[it].top + t * (r2[it].top - r1[it].top),
+                        r1[it].right + t * (r2[it].right - r1[it].right),
+                        r1[it].bottom + t * (r2[it].bottom - r1[it].bottom),
+                    )
+                }
+            }
+
+        with(ValueAnimator.ofObject(evaluator, first, second)) {
+            duration = ANIMATION_DURATION
+            addUpdateListener {
+                for (i in first.indices) {
+                    first[i].set(((it.animatedValue as Array<*>)[i]) as RectF)
+                }
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    @JvmName("invokeArrayPointF")
+    private operator fun Pair<Array<PointF>, Array<PointF>>.invoke() {
+        val evaluator =
+            TypeEvaluator<Array<PointF>> { t, p1, p2 ->
+                Array(3) {
+                    PointF(
+                        p1[it].x + t * (p2[it].x - p1[it].x),
+                        p1[it].y + t * (p2[it].y - p1[it].y)
+                    )
+                }
+            }
+
+        with(ValueAnimator.ofObject(evaluator, first, second)) {
+            duration = ANIMATION_DURATION
+            addUpdateListener {
+                for (i in first.indices) {
+                    first[i].set(((it.animatedValue as Array<*>)[i]) as PointF)
+                }
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    @JvmName("invokeArrayFloat")
+    private operator fun Pair<Array<Float>, Array<Float>>.invoke() {
+        val evaluator =
+            TypeEvaluator<Array<Float>> { t, f1, f2 ->
+                Array(3) {
+                    f1[it] + t * (f2[it] - f1[it])
+                }
+            }
+
+        with(ValueAnimator.ofObject(evaluator, first, second)) {
+            duration = ANIMATION_DURATION
+            addUpdateListener {
+                for (i in first.indices) {
+                    first[i] = (it.animatedValue as Array<*>)[i] as Float
+                }
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    @JvmName("invokeArrayInt")
+    private operator fun Pair<Array<Int>, Array<Int>>.invoke() {
+        val evaluator =
+            TypeEvaluator<Array<Int>> { t, i1, i2 ->
+                Array(3) {
+                    (i1[it] + t * (i2[it] - i1[it])).toInt()
+                }
+            }
+
+        with(ValueAnimator.ofObject(evaluator, first, second)) {
+            duration = ANIMATION_DURATION
+            addUpdateListener {
+                for (i in first.indices) {
+                    first[i] = (it.animatedValue as Array<*>)[i] as Int
+                }
+                invalidate()
+            }
+            start()
         }
     }
 }

@@ -8,7 +8,9 @@
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_button.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_button_green.xml" value="0.205859375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_date_time_btn.xml" value="0.205859375" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_dialog.xml" value="0.205859375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_edit_text.xml" value="0.205859375" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_line_bar.xml" value="0.205859375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_payment_item.xml" value="0.27447916666666666" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/bg_textinput.xml" value="0.29140625" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.29140625" />
@@ -24,8 +26,8 @@
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_date_picker.xml" value="0.19375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_enter_amount.xml" value="0.19375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_payment_method.xml" value="0.19375" />
-        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_post_transaction.xml" value="0.279296875" />
-        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_savings_accounts.xml" value="0.279296875" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_post_transaction.xml" value="0.176" />
+        <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_savings_accounts.xml" value="0.19375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_time_picker.xml" value="0.202734375" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/dialog_transaction_password.xml" value="0.1" />
         <entry key="..\:/Programming/Android/CustomView/app/src/main/res/layout/fragment_demo.xml" value="0.19375" />

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="24dp">
@@ -12,7 +11,7 @@
         android:layout_width="48dp"
         android:layout_height="4dp"
         android:layout_marginTop="28dp"
-        android:background="#5A87BB"
+        android:background="@drawable/bg_line_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:drawableStart="@drawable/ic_search"
+        android:drawableStart="@drawable/ic_rupee"
         android:hint="@string/enter_the_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tvEnterAmount"
@@ -47,18 +46,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="15sp"
+        android:text="Remaining Balance: 100,62,65,456.00"
         android:textColor="#989898"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@id/etAmount"
-        app:layout_constraintTop_toBottomOf="@id/etAmount"
-        android:text="Remaining Balance: 100,62,65,456.00" />
+        app:layout_constraintTop_toBottomOf="@id/etAmount" />
 
     <com.nishant.customview.views.MyEditText
         android:id="@+id/etNote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableStart="@drawable/ic_search"
+        android:drawableStart="@drawable/ic_note"
         android:hint="@string/add_a_note"
         app:layout_constraintEnd_toEndOf="@id/etAmount"
         app:layout_constraintStart_toStartOf="@id/etAmount"

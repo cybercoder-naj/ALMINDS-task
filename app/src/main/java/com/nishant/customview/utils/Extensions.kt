@@ -1,5 +1,6 @@
 package com.nishant.customview.utils
 
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.Resources
@@ -9,9 +10,13 @@ import android.view.MotionEvent
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.core.animation.addListener
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 fun Bitmap.getCircledBitmap(): Bitmap {
     val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
@@ -43,28 +48,6 @@ fun Int.setAlpha(alpha: Int): Int {
 fun MotionEvent.clickedIn(area: RectF) =
     area.contains(x, y)
 
-@JvmName("invokeFloatFloat")
-operator fun Pair<Float, Float>.invoke(callback: (Float) -> Unit) {
-    with(ValueAnimator.ofFloat(first, second)) {
-        duration = 300
-        addUpdateListener {
-            callback(it.animatedValue as Float)
-        }
-        start()
-    }
-}
-
-@JvmName("invokeIntInt")
-operator fun Pair<Int, Int>.invoke(callback: (Int) -> Unit) {
-    with(ValueAnimator.ofInt(first, second)) {
-        duration = 300
-        addUpdateListener {
-            callback(it.animatedValue as Int)
-        }
-        start()
-    }
-}
-
 fun Canvas.drawDrawable(res: Resources, @DrawableRes id: Int, dst: RectF, paint: Paint? = null) {
     ResourcesCompat.getDrawable(res, id, null)
         ?.toBitmap()?.let {
@@ -79,6 +62,15 @@ operator fun String.times(n: Int): String {
     }
     return sb.toString()
 }
+
+fun PointF.transformPointWithRotation(degrees: Float) {
+    val newX = cos(degrees.rad()) * x - sin(degrees.rad()) * y
+    val newY = sin(degrees.rad()) * x + cos(degrees.rad()) * y
+    set(newX, newY)
+}
+
+fun Float.rad() = this * PI.toFloat() / 180f
+
 
 val Float.dp
     get() = TypedValue.applyDimension(

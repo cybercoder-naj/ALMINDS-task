@@ -153,7 +153,7 @@ class HomeIcon @JvmOverloads constructor(
                 bottom = top + dateBounds.height()
             }
 
-            canvas.drawDrawable(resources, R.drawable.ic_clock_red, clockRect)
+            // canvas.drawDrawable(resources, R.drawable.ic_clock_red, clockRect)
             canvas.drawText(
                 date,
                 clockRect.right + 4.dp,

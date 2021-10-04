@@ -93,7 +93,7 @@ class BankIcon @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 84.dp.toInt()
+        val desiredWidth = (context.resources.displayMetrics.widthPixels - 32.dp.toInt()) / 4
         val desiredHeight = 128.dp.toInt()
 
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)

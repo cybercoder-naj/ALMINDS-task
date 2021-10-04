@@ -23,6 +23,8 @@ class EnterAmountDialog : RoundedBottomSheetFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        binding.btnConfirm.setOnClickListener {
+            dismiss()
+        }
     }
 }

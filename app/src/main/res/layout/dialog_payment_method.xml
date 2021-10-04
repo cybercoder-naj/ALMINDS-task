@@ -21,7 +21,7 @@
             android:layout_width="48dp"
             android:layout_height="4dp"
             android:layout_marginTop="28dp"
-            android:background="#5A87BB"
+            android:background="@drawable/bg_line_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -62,6 +62,7 @@
             android:textAllCaps="false"
             android:textColor="#1B79E6"
             android:textSize="16sp"
+            android:visibility="@{model.showDateTimeVisibility}"
             app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

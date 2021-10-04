@@ -3,8 +3,7 @@
     <string name="savings_accounts">Savings Accounts</string>
     <string name="select_savings_account_to_transfer">Select savings account to transfer</string>
     <string name="past_transactions">Past Transactions</string>
-    <string name="pay_when_received">\"Pay\" when received</string>
-    <string name="pay_again_when_paid">\"Pay again\" when paid</string>
+    <string name="pay_when_received">\"Pay\" when received\n\"Pay again\" when paid</string>
     <string name="choose_payment_method">Choose Payment Method</string>
     <string name="select_date_time"><![CDATA[Select date & time]]></string>
     <string name="enter_amount">Enter Amount</string>
@@ -17,7 +16,8 @@
         *After confirming the transaction password, the transaction can not be canceled or reversed
     </string>
     <string name="payment_successful">Payment Successful</string>
-    <string name="view_receipt">View Receipt</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pay">Pay</string>
+    <string name="view_receipt">View Receipt</string>
 </resources>

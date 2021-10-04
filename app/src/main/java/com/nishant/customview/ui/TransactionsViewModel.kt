@@ -1,5 +1,6 @@
 package com.nishant.customview.ui
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,10 @@ class TransactionsViewModel : ViewModel() {
     val paymentMethods: LiveData<List<PaymentMethodItem>>
         get() = _paymentMethods
     private val _paymentMethods = MutableLiveData<List<PaymentMethodItem>>(emptyList())
+
+    val showDateTimeVisibility: LiveData<Int>
+        get() = _showDateTimeVisibility
+    private var _showDateTimeVisibility = MutableLiveData(View.GONE)
 
     init {
         // Get data from repository
@@ -74,8 +79,12 @@ class TransactionsViewModel : ViewModel() {
     fun selectPaymentMethod(paymentMethodItem: PaymentMethodItem) {
         _paymentMethods.value = _paymentMethods.value?.onEach {
             it.checked = false
-            if (it == paymentMethodItem)
+            if (it == paymentMethodItem) {
                 it.checked = true
+                _showDateTimeVisibility.value = if (it.name == "Schedule Payment")
+                    View.VISIBLE
+                else View.GONE
+            }
         }
     }
 }

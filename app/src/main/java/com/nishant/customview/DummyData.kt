@@ -69,15 +69,15 @@ object DummyData {
             false
         ),
         PaymentMethodItem(
-            "NEFT", "Fast", "Up to 5 Lakhs from 12:30 am to 6:30 pm. " +
+            "NEFT", "Fast", "Up to 5 Lakhs from 12:30 am to 6:30 pm.\n" +
                     "Up to 3 Lakhs from  6:31 pm to 11:30 pm", false
         ),
         PaymentMethodItem(
-            "RTGS", "Faster", "Available from 7:00 am to 5:45 pm on RBI working days " +
+            "RTGS", "Faster", "Available from 7:00 am to 5:45 pm on RBI working days\n" +
                     "For transfer above 2 Lakhs", false
         ),
         PaymentMethodItem(
-            "Schedule Payment", "NEFT", "Available from 7:00 am to 5:45 pm on RBI working days " +
+            "Schedule Payment", "NEFT", "Available from 7:00 am to 5:45 pm on RBI working days\n" +
                     "For transfer above 2 Lakhs", false
         ),
     )

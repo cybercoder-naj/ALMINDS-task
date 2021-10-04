@@ -16,8 +16,8 @@
         android:text="Select Date"
         android:textColor="@color/black"
         android:textSize="28sp"
+        android:drawableStart="@drawable/ic_select_date"
         android:textStyle="bold"
-        app:drawableLeftCompat="@drawable/ic_baseline_calendar_today_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
