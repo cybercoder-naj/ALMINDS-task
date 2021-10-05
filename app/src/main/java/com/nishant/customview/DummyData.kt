@@ -1,5 +1,7 @@
 package com.nishant.customview
 
+import com.nishant.customview.models.Account
+import com.nishant.customview.models.Bank
 import com.nishant.customview.models.PaymentMethodItem
 import com.nishant.customview.models.TransactionItem
 
@@ -80,5 +82,17 @@ object DummyData {
             "Schedule Payment", "NEFT", "Available from 7:00 am to 5:45 pm on RBI working days\n" +
                     "For transfer above 2 Lakhs", false
         ),
+    )
+
+    val banks = listOf(
+        Bank("Axis", R.drawable.android),
+        Bank("HDFC", R.drawable.android),
+        Bank("SBI", R.drawable.android),
+        Bank("ICICI", R.drawable.android),
+    )
+
+    val accounts = listOf(
+        Account("5109002254940011", false),
+        Account("9023495571000791", false)
     )
 }

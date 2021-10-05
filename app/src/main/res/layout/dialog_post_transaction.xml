@@ -21,8 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line_bar">
@@ -35,37 +35,39 @@
             android:clickable="true"
             android:drawablePadding="16dp"
             android:focusable="true"
-            android:textStyle="bold"
             android:gravity="center"
             android:text="@string/pay"
             android:textColor="#243257"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_arrow_up_pay"
             app:drawableTint="#1B79E6" />
 
-         <TextView
+        <TextView
             android:id="@+id/secondaryAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="48dp"
-            android:textStyle="bold"
             android:clickable="true"
-            android:drawablePadding="16dp" android:focusable="true"
+            android:drawablePadding="16dp"
+            android:focusable="true"
             android:gravity="center"
             android:text="@string/view_receipt"
             android:textColor="#243257"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_view_receipt"
-             app:drawableTint="#1B79E6" />
+            app:drawableTint="#1B79E6" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            android:textColor="#243257"
             android:layout_marginEnd="24dp"
             android:text="@string/pay_when_received"
+            android:textColor="#243257"
             android:textSize="22sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

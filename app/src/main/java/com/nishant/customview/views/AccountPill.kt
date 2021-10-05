@@ -136,8 +136,8 @@ class AccountPill @JvmOverloads constructor(
 
             canvas.drawText(
                 text,
-                padding + cornerRadius / 2f,
-                height / 2f - padding + textBounds.height() / 2f,
+                padding + cornerRadius / 1.5f,
+                height / 2f - padding + textBounds.height() / 1.5f,
                 textPaint
             )
         }

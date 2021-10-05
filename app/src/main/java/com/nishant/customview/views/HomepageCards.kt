@@ -337,10 +337,6 @@ class HomepageCards @JvmOverloads constructor(
     }
 
     private var showAmount = BooleanArray(3)
-        set(value) {
-            field = value
-            invalidate()
-        }
     private val _amount: Array<String>
         get() = amount.map { it.toString() }.toTypedArray()
 
@@ -443,6 +439,9 @@ class HomepageCards @JvmOverloads constructor(
                 right = left + 32.dp
                 bottom = top + 12.dp
             }
+        }
+        for (i in 0..2) {
+            cTabLayout[i].set(tabLayout[SAVINGS][i])
         }
     }
 
@@ -682,7 +681,10 @@ class HomepageCards @JvmOverloads constructor(
         when (touchType) {
             TouchType.SAVINGS_CARD, TouchType.PAY_LATER_CARD, TouchType.CRYPTO_CARD ->
                 expandedCard = touchType.getInt()
-            TouchType.EYE_BUTTON -> showAmount[expandedCard] = !showAmount[expandedCard]
+            TouchType.EYE_BUTTON -> {
+                showAmount[expandedCard] = !showAmount[expandedCard]
+                invalidate()
+            }
             TouchType.TRANSFER_BUTTON, TouchType.REQUEST_BUTTON, TouchType.ARROW_BUTTON ->
                 onClickListeners(expandedCard, touchType.getInt())
             TouchType.UP -> Unit

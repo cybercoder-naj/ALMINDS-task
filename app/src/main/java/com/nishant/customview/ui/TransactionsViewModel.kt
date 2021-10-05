@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nishant.customview.DummyData
 import com.nishant.customview.R
-import com.nishant.customview.models.PaymentMethodItem
-import com.nishant.customview.models.TransactionItem
-import com.nishant.customview.models.TransferIconData
+import com.nishant.customview.models.*
 import com.nishant.customview.utils.sortedData
 
 class TransactionsViewModel : ViewModel() {
@@ -25,9 +23,25 @@ class TransactionsViewModel : ViewModel() {
         get() = _paymentMethods
     private val _paymentMethods = MutableLiveData<List<PaymentMethodItem>>(emptyList())
 
+    val banks: LiveData<List<Bank>>
+        get() = _banks
+    private val _banks = MutableLiveData<List<Bank>>(emptyList())
+
+    val accounts: LiveData<List<Account>>
+        get() = _accounts
+    private val _accounts = MutableLiveData<List<Account>>(emptyList())
+
     val showDateTimeVisibility: LiveData<Int>
         get() = _showDateTimeVisibility
     private var _showDateTimeVisibility = MutableLiveData(View.GONE)
+
+    val bankName: LiveData<String>
+        get() = _bankName
+    private var _bankName = MutableLiveData("")
+
+    val accountNumber: LiveData<String>
+        get() = _accountNumber
+    private var _accountNumber = MutableLiveData("")
 
     init {
         // Get data from repository
@@ -41,6 +55,11 @@ class TransactionsViewModel : ViewModel() {
         )
 
         _paymentMethods.value = DummyData.paymentMethods
+        _banks.value = DummyData.banks
+        _accounts.value = DummyData.accounts
+
+        _bankName.value = "ICICI"
+        _accountNumber.value = "************4173"
     }
 
     private fun groupedTransactions(): LiveData<List<TransactionItem>> {
@@ -85,6 +104,18 @@ class TransactionsViewModel : ViewModel() {
                     View.VISIBLE
                 else View.GONE
             }
+        }
+    }
+
+    fun selectBank(bank: Bank) {
+        _banks.value = _banks.value?.onEach {
+            it.checked = it == bank
+        }
+    }
+
+    fun selectAccount(account: Account) {
+        _accounts.value = _accounts.value?.onEach {
+            it.checked = it == account
         }
     }
 }

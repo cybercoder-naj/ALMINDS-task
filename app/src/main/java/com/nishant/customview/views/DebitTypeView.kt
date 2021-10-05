@@ -279,9 +279,9 @@ class DebitTypeView @JvmOverloads constructor(
         diagonalArrow?.toBitmap()?.let {
             canvas.apply {
                 rotate(180f, width * .895f, height / 15.3f)
-                translate(width * -.075f, height * -.175f)
+                translate(width * -.085f, height * -.2f)
                 drawBitmap(it, width * .895f, height / 15.3f, null)
-                translate(width * .075f, height * .175f)
+                translate(width * .085f, height * .2f)
                 rotate(-180f, width * .895f, height / 15.3f)
             }
         }

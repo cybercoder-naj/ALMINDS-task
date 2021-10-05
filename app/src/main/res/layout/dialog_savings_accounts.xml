@@ -1,75 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_dialog"
-    android:paddingBottom="24dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <view
-        android:id="@+id/line_bar"
-        class="android.view.View"
-        android:layout_width="48dp"
-        android:layout_height="4dp"
-        android:layout_marginTop="28dp"
-        android:background="#5A87BB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="viewModel"
+            type="com.nishant.customview.ui.TransactionsViewModel" />
+    </data>
 
-    <TextView
-        android:id="@+id/tvPaymentMethod"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/savings_accounts"
-        android:textColor="#243257"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line_bar" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_dialog"
+        android:paddingBottom="24dp">
 
-    <TextView
-        android:id="@+id/tvSelectSavings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/select_savings_account_to_transfer"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/tvPaymentMethod"
-        app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod" />
+        <view
+            android:id="@+id/line_bar"
+            class="android.view.View"
+            android:layout_width="48dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="28dp"
+            android:background="#5A87BB"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/banksRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSelectSavings" />
+        <TextView
+            android:id="@+id/tvPaymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/savings_accounts"
+            android:textColor="#243257"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_bar" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/accountsRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="#F8F8F8"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/banksRecyclerView" />
+        <TextView
+            android:id="@+id/tvSelectSavings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_savings_account_to_transfer"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/tvPaymentMethod"
+            app:layout_constraintTop_toBottomOf="@id/tvPaymentMethod" />
 
-    <com.nishant.customview.views.BottomSheetButton
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:text="Continue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/accountsRecyclerView" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/banksRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            bankItems="@{viewModel.banks}"
+            app:layout_constraintTop_toBottomOf="@id/tvSelectSavings" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/accountsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#F8F8F8"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            accountItems="@{viewModel.accounts}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banksRecyclerView" />
+
+        <com.nishant.customview.views.BottomSheetButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:text="Continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accountsRecyclerView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
