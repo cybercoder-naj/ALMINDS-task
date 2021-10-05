@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.animation.addListener
+import androidx.core.animation.doOnEnd
 import com.nishant.customview.utils.*
 import java.util.*
 import kotlin.math.abs
@@ -34,7 +34,6 @@ class DatePickerView @JvmOverloads constructor(
         private const val PERIPHERY = 7
     }
 
-    private var lastChange = 0
     private val dateBounds = Rect()
     private val linePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Style.STROKE
@@ -97,7 +96,7 @@ class DatePickerView @JvmOverloads constructor(
         }
     private var touchX = 0f
 
-    private val threshold = 48.dp
+    private val threshold = 84.dp
 
     private var dateSelectRange = 0.0f..0.0f
 
@@ -142,10 +141,6 @@ class DatePickerView @JvmOverloads constructor(
             currentMon = this[Calendar.MONTH]
             currentDate = this[Calendar.DATE]
         }
-
-        Log.d(TAG, "threshold: $threshold")
-        Log.d(TAG, "window: ${84.dp}")
-        Log.d(TAG, "gap: ${92.dp}")
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -332,7 +327,7 @@ class DatePickerView @JvmOverloads constructor(
 
             val day = getDay(currentYr, currentMon, index)
             datePaint.getTextBounds(day, 0, day.length, dateBounds)
-            var actualX = midX - threshold * 2 * i
+            var actualX = midX - 92.dp * i
             if (touchEvent == DOWN_DATE_SELECT)
                 actualX += touchDx
             val dx = 1 - abs(actualX - midX) / width
@@ -364,7 +359,7 @@ class DatePickerView @JvmOverloads constructor(
 
             val day = getDay(currentYr, currentMon, index)
             datePaint.getTextBounds(day, 0, day.length, dateBounds)
-            var actualX = midX + threshold * 2 * i
+            var actualX = midX + 92.dp * i
             if (touchEvent == DOWN_DATE_SELECT)
                 actualX += touchDx
             val dx = 1 - abs(actualX - midX) / width
@@ -488,19 +483,8 @@ class DatePickerView @JvmOverloads constructor(
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
-                val change = (touchDx / threshold).toInt()
-                if (abs(change) > lastChange) {
-                    lastChange = abs(change)
-                    touchDx = -threshold
-                    touchX = event.x - touchDx
-                    currentDate -= change
-                    if (currentDate < 1)
-                        currentDate = 1
-                    if (currentDate > getLastDate(currentMon, currentYr))
-                        currentDate = getLastDate(currentMon, currentYr)
-                } else
-                    touchDx = event.x - touchX
-                invalidate()
+                touchDx = event.x - touchX
+                postInvalidate()
                 return true
             }
             MotionEvent.ACTION_UP -> {
@@ -508,21 +492,17 @@ class DatePickerView @JvmOverloads constructor(
                     DOWN_LEFT_ARROW -> currentYr--
                     DOWN_RIGHT_ARROW -> currentYr++
                     DOWN_DATE_SELECT -> {
-
+                        val change = (touchDx / threshold).toInt()
+                        currentDate -= change
+                        if (currentDate < 1)
+                            currentDate = 1
+                        if (currentDate > getLastDate(currentMon, currentYr))
+                            currentDate = getLastDate(currentMon, currentYr)
                     }
                 }
-                with(ValueAnimator.ofFloat(touchDx, 0f)) {
-                    duration = 500
-                    addUpdateListener {
-                        touchDx = it.animatedValue as Float
-                        postInvalidate()
-                    }
-                    addListener(onEnd = {
-                        touchEvent = UP
-                        lastChange = 0
-                    })
-                    start()
-                }
+                touchX = 0f
+                touchDx = 0f
+                touchEvent = UP
             }
         }
 
